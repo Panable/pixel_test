@@ -1,108 +1,71 @@
+from PIL import Image, ImageDraw, ImageFont
+from getweather import get_weather
 
-def draw_pixel(x, y, pixel_colors, color=(255, 255, 255)):
-    pixel_colors[x][y] = color
+scaling_factor = 40
+adjusted_width, adjusted_height = 64 * scaling_factor, 32 * scaling_factor
 
-def render_number(number, x_offset, y_offset, pixel_colors):
+font_path = "/usr/local/share/fonts/ProggyCleanCENerdFontMono-Regular.ttf"
+time_font_size = 14 * scaling_factor
+icon_font_size = 10 * scaling_factor  # Adjust as required
+temp_font_size = 12 * scaling_factor  # Adjust as required
 
+time_font = ImageFont.truetype(font_path, time_font_size)
+icon_font = ImageFont.truetype(font_path, icon_font_size)
+temp_font = ImageFont.truetype(font_path, temp_font_size)
 
-    numbers = {
-        '0': [
-            " XX ",
-            "X  X",
-            "X  X",
-            "X  X",
-            " XX "
-        ],
-        '1': [
-            " X  ",
-            "XX  ",
-            " X  ",
-            " X  ",
-            "XXX "
-        ],
-        '2': [
-            " XX ",
-            "X  X",
-            "  X ",
-            " X  ",
-            "XXXX"
-        ],
-        '3': [
-            "XXX ",
-            "   X",
-            " XX ",
-            "   X",
-            "XXX "
-        ],
-        '4': [
-            "X  X",
-            "X  X",
-            "XXXX",
-            "   X",
-            "   X"
-        ],
-        '5': [
-            "XXXX",
-            "X   ",
-            "XXX ",
-            "   X",
-            "XXX "
-        ],
-        '6': [
-            " XX ",
-            "X   ",
-            "XXX ",
-            "X  X",
-            " XX "
-        ],
-        '7': [
-            "XXXX",
-            "   X",
-            "  X ",
-            " X  ",
-            "X   "
-        ],
-        '8': [
-            " XX ",
-            "X  X",
-            " XX ",
-            "X  X",
-            " XX "
-        ],
-        '9': [
-            " XX ",
-            "X  X",
-            " XXX",
-            "   X",
-            " XX "
-        ]
-    }
+def get_text_dimensions(text_string, font):
+    text_string = str(text_string)
+    ascent, descent = font.getmetrics()
+    text_width = font.getmask(text_string).getbbox()[2]
+    text_height = font.getmask(text_string).getbbox()[3] + descent
+    return (text_width, text_height)
 
+def format_time(current_time):
+    hour_str, minute_str = current_time
+    return f"{hour_str}:{minute_str}"
 
-    for y, row in enumerate(numbers[str(number)]):
-        for x, char in enumerate(row):
-            if char == 'X':
-                draw_pixel(x + x_offset, y + y_offset, pixel_colors)
+def create_time_image(current_time, city='Sydney'):
+    img = Image.new('RGB', (adjusted_width, adjusted_height), color=(0, 0, 0))
+    draw = ImageDraw.Draw(img)
 
+    time_str = format_time(current_time)
+    hour_str, minute_str = time_str.split(":")
 
-def render_colon(x_offset, y_offset, pixel_colors):
-    draw_pixel(x_offset, y_offset + 1, pixel_colors)  # top dot
-    draw_pixel(x_offset, y_offset + 3, pixel_colors)  # bottom dot
+    hour_width, hour_height = get_text_dimensions(hour_str, time_font)
+    minute_width, minute_height = get_text_dimensions(minute_str, time_font)
 
+    total_width = hour_width + minute_width + scaling_factor
 
+    hour_x = (adjusted_width - total_width) // 2
+    minute_x = hour_x + hour_width + scaling_factor
 
-def clear_region(x_start, x_end, y_start, y_end, pixel_colors):
-    for x in range(x_start, x_end):
-        for y in range(y_start, y_end):
-            pixel_colors[x][y] = (0, 0, 0) #bg black 
+    draw.text((hour_x, 2 * scaling_factor), hour_str, font=time_font, fill=(255, 255, 255))
+    draw.text((minute_x, 2 * scaling_factor), minute_str, font=time_font, fill=(255, 255, 255))
 
-def render_time(hour_str, minute_str, pixel_colors):
-    x_margin = (64 - 19) // 2  # Center time
-    y_margin = 2  # Small margin from top
+    # Manually draw the colon (for now)
+    colon_center_x = hour_x + hour_width + scaling_factor // 2
+    colon_center_y = 7 * scaling_factor
+    colon_spacing = scaling_factor * 2
+    draw.rectangle([(colon_center_x - scaling_factor // 2, colon_center_y - colon_spacing),
+                    (colon_center_x + scaling_factor // 2, colon_center_y - colon_spacing + scaling_factor)], fill=(255, 255, 255))
+    draw.rectangle([(colon_center_x - scaling_factor // 2, colon_center_y + colon_spacing),
+                    (colon_center_x + scaling_factor // 2, colon_center_y + colon_spacing + scaling_factor)], fill=(255, 255, 255))
 
-    render_number(hour_str[0], x_margin, y_margin, pixel_colors)
-    render_number(hour_str[1], x_margin + 5, y_margin, pixel_colors)
-    render_colon(x_margin + 10, y_margin, pixel_colors)
-    render_number(minute_str[0], x_margin + 12, y_margin, pixel_colors)
-    render_number(minute_str[1], x_margin + 17, y_margin, pixel_colors)
+    
 
+    icon_str, temp_str = get_weather()
+    temp_str_with_symbol = f"{temp_str}°C"
+
+    
+    icon_width, icon_height = get_text_dimensions(icon_str, icon_font)
+    temp_width, temp_height = get_text_dimensions(temp_str_with_symbol, temp_font)
+    
+    
+    icon_x = (adjusted_width - (icon_width + scaling_factor + temp_width)) // 2
+    temp_x = icon_x + icon_width + scaling_factor
+    
+    draw.text((icon_x, 18 * scaling_factor), str(icon_str), font=icon_font, fill=(255, 255, 255))
+    draw.text((temp_x, 18 * scaling_factor), str(temp_str_with_symbol), font=temp_font, fill=(255, 255, 255))
+    
+    return img
+    
