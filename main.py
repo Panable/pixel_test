@@ -26,9 +26,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    # Always update the time.
+    img = create_time_image(get_current_time())
+    
     # Update the weather only every 10 minutes
     if update_counter >= SECONDS_IN_10_MINUTES:
-        img = create_time_image(get_current_time())
         update_counter = 0  # Reset the counter
 
     pygame_img = pygame.image.fromstring(img.tobytes(), img.size, img.mode)
