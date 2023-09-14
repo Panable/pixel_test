@@ -1,6 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 from getstocks import get_stock_data
 
+# Always render chart 64x32
+width, height = 64, 32
 scaling_factor = 40
 adjusted_width, adjusted_height = 64 * scaling_factor, 32 * scaling_factor
 font_path = "/usr/local/share/fonts/ProggyCleanCENerdFontMono-Regular.ttf"
@@ -19,43 +21,47 @@ def get_text_dimensions(text_string, font):
     text_height = font.getmask(text_string).getbbox()[3] + descent
     return (text_width, text_height)
 
+
+
 def draw_chart(draw, daily_prices, start_y):
     max_price = max(daily_prices)
     min_price = min(daily_prices)
-    
-    chart_area_height = 20 * scaling_factor
+
+    chart_end_y = adjusted_height - (2 * scaling_factor)  # giving a little padding at the bottom
+    chart_area_height = chart_end_y - start_y
     chart_area_width = adjusted_width
 
-    scaled_prices = [
-        int(((price - min_price) / (max_price - min_price)) * chart_area_height) 
-        for price in daily_prices
+    raw_scaled_prices = [
+            int(((price - min_price) / (max_price - min_price)) * chart_area_height)
+            for price in daily_prices
     ]
 
+    scaled_prices = [start_y + price for price in raw_scaled_prices]
     x_interval = chart_area_width / (len(scaled_prices) - 1)
-    
-    polygon_points = [(0, start_y + chart_area_height)]
+
+    polygon_points = [(0, adjusted_height - 1)]
     for i, price in enumerate(scaled_prices):
         x_pos = i * x_interval
-        y_pos = start_y + chart_area_height - price
-        polygon_points.append((x_pos, y_pos))
-    polygon_points.append((adjusted_width-1, start_y + chart_area_height))
-    
-    draw.polygon(polygon_points, fill=(0, 255, 0))
-    
-    for i in range(1, len(scaled_prices)):
-        start_point = ((i-1) * x_interval, start_y + chart_area_height - scaled_prices[i-1])
-        end_point = (i * x_interval, start_y + chart_area_height - scaled_prices[i])
-        draw.line([start_point, end_point], fill=(127, 255, 127), width=1)
+        polygon_points.append((x_pos, price))
+    polygon_points.append((adjusted_width-1, adjusted_height - 1))
 
+    draw.polygon(polygon_points, fill=(0, 255, 0))
+
+    for i in range(1, len(scaled_prices)):
+        start_point = ((i-1) * x_interval, scaled_prices[i-1])
+        end_point = (i * x_interval, scaled_prices[i])
+        draw.line([start_point, end_point], fill=(127, 255, 127), width=10)
+
+    print("First polygon point:", polygon_points[0])
+    print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
 
-def create_stock_image(ticker='AAPL'):
+def create_stock_image(ticker='AAPL'):  
     img = Image.new('RGB', (adjusted_width, adjusted_height), color=(0, 0, 0))
     draw = ImageDraw.Draw(img)
     
     stock_data = get_stock_data(ticker)
-    print(stock_data)
-    
+    print(stock_data)    
     # Render stock ticker
     ticker_str = stock_data['ticker']
     ticker_width, ticker_height = get_text_dimensions(ticker_str, ticker_font)
@@ -84,15 +90,28 @@ def create_stock_image(ticker='AAPL'):
     change_percent_x = adjusted_width - change_percent_width - 10
     change_percent_y = change_dollar_y + change_dollar_height + scaling_factor
     draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
-    # Calculate start_y for the chart based on where the last text is drawn
+      # Calculate start_y for the chart based on where the last text is drawn
     total_text_height = change_percent_y + change_percent_height
-    chart_start_y = total_text_height + (3 * scaling_factor)  # Added some padding
-
+    # Calculate start_y for the chart based on where the last text is drawn
+    margin = 2 * scaling_factor  # Define margin after the text
+    
+    
+    total_text_height = change_percent_y + change_percent_height
+    margin = 2 * scaling_factor  # Define margin 
+    chart_start_y = total_text_height + margin
+    
     # Draw the chart
     draw_chart(draw, stock_data['daily_close_prices'], chart_start_y)
     
     return img
 
 if __name__ == "__main__":
-    # Test the rendering
-    create_stock_image('AAPL').show()
+    img = create_stock_image('AAPL')
+    
+    # I never want to program graphics with python again 
+    scaling_factor_for_visualization = 10
+    img_rescaled = img_scaled_down.resize((width * scaling_factor_for_visualization, height * scaling_factor_for_visualization), resample=Image.NEAREST)
+    img_rescaled.show()
+
+
+
