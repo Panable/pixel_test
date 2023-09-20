@@ -70,6 +70,10 @@ There are a lot as I'm early into this.
 
 4. I haven't integrated (yet) a way to run the python without passing --led-gpio-mapping=adafruit-hat. I'm sure it's possible, but I haven't actually read the full documentation as I've mostly been debugging since the matrix arrived.
 
+5. The stocks render currently just uses a placeholder. It's like this so that I can debug the rendering stuff before I call the API a bunch of times and hit my quota. 
+6. I was using lpass cli to pull my API key for the weather one (although this is currently commented out until I can debug it anyway). Better off not doing that I would think, but as of now I haven't setup an API key thing. I'd suggest using gpg or something.
+
+7. This readme doesn't explain really how the stocks one works. I'll add that in later, or you can read the code and decipher it. It's not too complex and basically (will) pull the stock data including the candles and formatting it. 
 
 # Dependencies:
 
@@ -78,6 +82,4 @@ Currently, dependencies are:
 1. Python3 & pip
 2. Pillow library
 3. rpi-rgb-led-matrix library (you can find a link to that where I talked about wiring/pinout).
-4. Numpy.
-5. The stocks render currently just uses a placeholder. It's like this so that I can debug the rendering stuff before I call the API a bunch of times and hit my quota. 
-6. I was using lpass cli to pull my API key for the weather one (although this is currently commented out until I can debug it anyway). Better off not doing that I would think, but as of now I haven't setup an API key thing. I'd suggest using gpg or something.
+4. Numpy
