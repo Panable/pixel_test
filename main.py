@@ -9,7 +9,7 @@ if __name__ == "__main__":
             
             # Wait for a minute before refreshing. 
             # This delay ensures you aren't hitting the API too frequently. Adjust as needed.
-            time.sleep(60)
+            time.sleep(600)
 
     except KeyboardInterrupt:
         # Cleanup actions can be placed here if needed
