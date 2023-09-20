@@ -32,9 +32,9 @@ def get_text_dimensions(text_string, font):
     text_height = font.getmask(text_string).getbbox()[3] + descent
     return (text_width, text_height)
 
-def draw_chart_on_matrix(matrix_img, draw, daily_prices, start_y):
-    max_price = max(daily_prices)
-    min_price = min(daily_prices)
+def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y):
+    max_price = max(daily_close_prices)
+    min_price = min(daily_close_prices)
 
     chart_end_y = adjusted_height - (2 * scaling_factor)  # giving a little padding at the bottom
     chart_area_height = chart_end_y - start_y
@@ -42,7 +42,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_prices, start_y):
 
     raw_scaled_prices = [
             int(((price - min_price) / (max_price - min_price)) * chart_area_height)
-            for price in daily_prices
+            for price in daily_close_prices
     ]
 
     scaled_prices = [start_y + price for price in raw_scaled_prices]
@@ -108,7 +108,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     chart_start_y = total_text_height + margin
 
     # Draw the stock chart on the matrix image
-    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_prices'], chart_start_y)
+    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y)
 
     # Convert the original image to numpy array
     image_np = np.array(matrix_img)
@@ -118,9 +118,10 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     # Convert the resized numpy array back to a PIL image
     final_image = Image.fromarray(image_np_resized)
-
+    frame_canvas = matrix.CreateFrameCanvas()
+    frame_canvas.SetImage(final_image)
     # Display on matrix
-    matrix.SetImage(final_image)
+    matrix.SwapOnVSync(frame_canvas)
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL') / 1 / 1
