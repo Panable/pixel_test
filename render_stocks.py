@@ -1,5 +1,15 @@
 from PIL import Image, ImageDraw, ImageFont
 from getstocks import get_stock_data
+from rgbmatrix import RGBMatrix, RGBMatrixOptions
+
+# Initialize matrix
+options = RGBMatrixOptions()
+options.rows = 32
+options.cols = 64
+options.chain_length = 1
+options.parallel = 1
+options.hardware_mapping = 'adafruit-hat'
+matrix = RGBMatrix(options=options)
 
 # Always render chart 64x32
 width, height = 64, 32
@@ -22,8 +32,7 @@ def get_text_dimensions(text_string, font):
     return (text_width, text_height)
 
 
-
-def draw_chart(draw, daily_prices, start_y):
+def draw_chart_on_matrix(matrix_img, draw, daily_prices, start_y):
     max_price = max(daily_prices)
     min_price = min(daily_prices)
 
@@ -56,10 +65,9 @@ def draw_chart(draw, daily_prices, start_y):
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
 
-def create_stock_image(ticker='AAPL'):  
-    img = Image.new('RGB', (adjusted_width, adjusted_height), color=(0, 0, 0))
-    draw = ImageDraw.Draw(img)
-    
+def render_stock_on_matrix(ticker='AAPL'):
+    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
+    draw = ImageDraw.Draw(matrix_img)    
     stock_data = get_stock_data(ticker)
     print(stock_data)    
     # Render stock ticker
@@ -101,17 +109,9 @@ def create_stock_image(ticker='AAPL'):
     chart_start_y = total_text_height + margin
     
     # Draw the chart
-    draw_chart(draw, stock_data['daily_close_prices'], chart_start_y)
+    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y)
     
-    return img
+    matrix.SetImage(matrix_img)
 
 if __name__ == "__main__":
-    img = create_stock_image('AAPL')
-    
-    # I never want to program graphics with python again 
-    scaling_factor_for_visualization = 10
-    img_rescaled = img_scaled_down.resize((width * scaling_factor_for_visualization, height * scaling_factor_for_visualization), resample=Image.NEAREST)
-    img_rescaled.show()
-
-
-
+    render_stock_on_matrix('AAPL')
