@@ -1,11 +1,17 @@
-from render_stocks import render_stock_on_matrix
 import time
-
-def main():
-    while True:
-        render_stock_on_matrix('AAPL')
-        time.sleep(600)  # Update every 10 minutes
+from render_stocks import render_stock_on_matrix
 
 if __name__ == "__main__":
-    main()
+    try:
+        while True:
+            # Display the stock data for AAPL
+            render_stock_on_matrix('AAPL')
+            
+            # Wait for a minute before refreshing. 
+            # This delay ensures you aren't hitting the API too frequently. Adjust as needed.
+            time.sleep(60)
+
+    except KeyboardInterrupt:
+        # Cleanup actions can be placed here if needed
+        pass
 

@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+import numpy as np
 from getstocks import get_stock_data
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -30,7 +31,6 @@ def get_text_dimensions(text_string, font):
     text_width = font.getmask(text_string).getbbox()[2]
     text_height = font.getmask(text_string).getbbox()[3] + descent
     return (text_width, text_height)
-
 
 def draw_chart_on_matrix(matrix_img, draw, daily_prices, start_y):
     max_price = max(daily_prices)
@@ -65,11 +65,14 @@ def draw_chart_on_matrix(matrix_img, draw, daily_prices, start_y):
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
 
+
 def render_stock_on_matrix(ticker='AAPL'):
-    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
-    draw = ImageDraw.Draw(matrix_img)    
+    matrix_img = Image.new('RGB', (adjusted_width, adjusted_height), color=(0, 0, 0))
+    draw = ImageDraw.Draw(matrix_img)
+
     stock_data = get_stock_data(ticker)
     print(stock_data)    
+
     # Render stock ticker
     ticker_str = stock_data['ticker']
     ticker_width, ticker_height = get_text_dimensions(ticker_str, ticker_font)
@@ -98,20 +101,26 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_percent_x = adjusted_width - change_percent_width - 10
     change_percent_y = change_dollar_y + change_dollar_height + scaling_factor
     draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
-      # Calculate start_y for the chart based on where the last text is drawn
-    total_text_height = change_percent_y + change_percent_height
+
     # Calculate start_y for the chart based on where the last text is drawn
-    margin = 2 * scaling_factor  # Define margin after the text
-    
-    
     total_text_height = change_percent_y + change_percent_height
-    margin = 2 * scaling_factor  # Define margin 
+    margin = 2 * scaling_factor  # Define margin after the text
     chart_start_y = total_text_height + margin
+
+    # Draw the stock chart on the matrix image
+    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_prices'], chart_start_y)
+
+    # Convert the original image to numpy array
+    image_np = np.array(matrix_img)
     
-    # Draw the chart
-    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y)
-    
-    matrix.SetImage(matrix_img)
+    # Resize numpy array to the matrix's resolution
+    image_np_resized = np.array(Image.fromarray(image_np).resize((width, height), Image.ANTIALIAS))
+
+    # Convert the resized numpy array back to a PIL image
+    final_image = Image.fromarray(image_np_resized)
+
+    # Display on matrix
+    matrix.SetImage(final_image)
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL')
