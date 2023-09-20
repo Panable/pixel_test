@@ -118,9 +118,10 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     # Convert the resized numpy array back to a PIL image
     final_image = Image.fromarray(image_np_resized)
-
+    frame_canvas = matrix.CreateFrameCanvas()
+    frame_canvas.SetImage(final_image)
     # Display on matrix
-    matrix.SetImage(final_image)
+    matrix.SwapOnVSync(frame_canvas)
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL') / 1 / 1
