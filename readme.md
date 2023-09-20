@@ -79,4 +79,5 @@ Currently, dependencies are:
 2. Pillow library
 3. rpi-rgb-led-matrix library (you can find a link to that where I talked about wiring/pinout).
 4. Numpy.
-
+5. The stocks render currently just uses a placeholder. It's like this so that I can debug the rendering stuff before I call the API a bunch of times and hit my quota. 
+6. I was using lpass cli to pull my API key for the weather one (although this is currently commented out until I can debug it anyway). Better off not doing that I would think, but as of now I haven't setup an API key thing. I'd suggest using gpg or something.
