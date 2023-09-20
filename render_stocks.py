@@ -114,7 +114,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     image_np = np.array(matrix_img)
     
     # Resize numpy array to the matrix's resolution
-    image_np_resized = np.array(Image.fromarray(image_np).resize((width, height), Image.ANTIALIAS))
+    image_np_resized = np.array(Image.fromarray(image_np).resize((width, height), Image.NEAREST))
 
     # Convert the resized numpy array back to a PIL image
     final_image = Image.fromarray(image_np_resized)
