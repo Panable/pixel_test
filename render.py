@@ -1,22 +1,19 @@
 from PIL import Image, ImageDraw, ImageFont
-#from PIL import Image, ImageDraw, ImageFont
-#from getweather import get_weather
-#import os
-#from textwrap import wrap
-#import numpy as np
-#from rgbmatrix import RGBMatrix, RGBMatrixOptions
-time_font_size = 14
-font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
-time_font = ImageFont.truetype(font_path, time_font_size)
-TOP_PADDING = 3
+
 width, height = 64, 32
+
+# Assuming that the font is located at the given path, adjust if necessary
+font_path = "/usr/local/share/fonts/Dina-Regular-01.ttf"
+time_font_size = 14
+
+time_font = ImageFont.truetype(font_path, time_font_size)
+
 def get_text_dimensions(text_string, font):
     text_string = str(text_string)
     ascent, descent = font.getmetrics()
     text_width = font.getmask(text_string).getbbox()[2]
     text_height = font.getmask(text_string).getbbox()[3] + descent
     return (text_width, text_height)
-
 
 def format_time(current_time):
     hour_str, minute_str = current_time
@@ -25,6 +22,7 @@ def format_time(current_time):
 def create_time_image(current_time):
     img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(img)
+
     time_str = format_time(current_time)
     time_str_split = time_str.split(":")
     hour_str, minute_str = time_str_split
@@ -33,20 +31,26 @@ def create_time_image(current_time):
     minute_width, minute_height = get_text_dimensions(minute_str, time_font)
     total_width = hour_width + minute_width + 1
 
-    colon_center_x = (width - total-width) // 2 + hour_width + 1
+    colon_center_x = (width - total_width) // 2 + hour_width + 1
     hour_x = colon_center_x - hour_width - 1
     minute_x = colon_center_x + 1
 
-    draw.text((hour_x, TOP_PADDING), hour_str, font=time_font, fill=(255, 255, 255))
-    draw.text((minute_x, TOP_PADDING), minute_str, font=time_font, fill=(255, 255, 255))
+    draw.text((hour_x, 0), hour_str, font=time_font, fill=(255, 255, 255))
+    draw.text((minute_x, 0), minute_str, font=time_font, fill=(255, 255, 255))
     colon_center_y = 7
     colon_spacing = 2
-    draw.rectancle([(colon_center_x, colon_center_y - colon_spacing),
-        (colon_center_x, colon_center_y - colon_spacing + 1)], fill=(255, 255, 255))
-    draw.rectancle([(colon_center_x, colon_center_y + colon_spacing),
-        (colon_center_x, colon_center_y + colon_spacing + 1)], fill=(255, 255, 255))
+    draw.rectangle([(colon_center_x, colon_center_y - colon_spacing),
+                    (colon_center_x, colon_center_y - colon_spacing + 1)], fill=(255, 255, 255))
+    draw.rectangle([(colon_center_x, colon_center_y + colon_spacing),
+                    (colon_center_x, colon_center_y + colon_spacing + 1)], fill=(255, 255, 255))
 
     return img
+#from PIL import Image, ImageDraw, ImageFont
+#from getweather import get_weather
+#import os
+#from textwrap import wrap
+#import numpy as np
+#from rgbmatrix import RGBMatrix, RGBMatrixOptions
 #TEMP_FONT_SIZE_FACTOR = 1.0 
 #ICON_SCALE_FACTOR = 0.6  
 #TOP_PADDING = 3
