@@ -14,16 +14,7 @@ matrix = RGBMatrix(options=options)
 
 # Always render chart 64x32
 width, height = 64, 32
-font_path = "/usr/local/share/fonts/ProggyCleanCENerdFontMono-Regular.ttf"
-
-# Adjusted font sizes for the reduced matrix size
-ticker_font_size = 10
-price_font_size = 8
-change_font_size = 8
-
-ticker_font = ImageFont.truetype(font_path, ticker_font_size)
-price_font = ImageFont.truetype(font_path, price_font_size)
-change_font = ImageFont.truetype(font_path, change_font_size)
+font_path = "/usr/local/share/fonts/DinaRemasterCollection.ttc/0"  # Replace the 0 if you want a different font from the collection
 
 def get_text_dimensions(text_string, font):
     text_string = str(text_string)
@@ -36,17 +27,23 @@ def draw_chart_on_matrix(draw, daily_prices, start_y):
     max_price = max(daily_prices)
     min_price = min(daily_prices)
 
-    chart_end_y = height - 2  # giving a little padding at the bottom
+    chart_end_y = height - 2
     chart_area_height = chart_end_y - start_y
-
     raw_scaled_prices = [
-        int(((price - min_price) / (max_price - min_price)) * chart_area_height)
-        for price in daily_prices
+            int(((price - min_price) / (max_price - min_price)) * chart_area_height)
+            for price in daily_prices
     ]
 
     scaled_prices = [start_y + price for price in raw_scaled_prices]
     x_interval = width / (len(scaled_prices) - 1)
 
+    polygon_points = [(0, height - 1)]
+    for i, price in enumerate(scaled_prices):
+        x_pos = i * x_interval
+        polygon_points.append((x_pos, price))
+    polygon_points.append((width-1, height - 1))
+
+    draw.polygon(polygon_points, fill=(0, 255, 0))
     for i in range(1, len(scaled_prices)):
         start_point = ((i-1) * x_interval, scaled_prices[i-1])
         end_point = (i * x_interval, scaled_prices[i])
@@ -59,43 +56,38 @@ def render_stock_on_matrix(ticker='AAPL'):
     draw = ImageDraw.Draw(matrix_img)
 
     stock_data = get_stock_data(ticker)
-    print(stock_data)    
+    print(stock_data)
+
+    # Fonts
+    ticker_font = ImageFont.truetype(font_path, 10) 
+    price_font = ImageFont.truetype(font_path, 10)
+    change_font = ImageFont.truetype(font_path, 10)
 
     # Render stock ticker
     ticker_str = stock_data['ticker']
     ticker_width, ticker_height = get_text_dimensions(ticker_str, ticker_font)
-    ticker_x = 2
-    ticker_y = 2
-    draw.text((ticker_x, ticker_y), ticker_str, font=ticker_font, fill=(255, 255, 255))
+    draw.text((10, 2), ticker_str, font=ticker_font, fill=(255, 255, 255))
 
     # Render current price
     price_str = f"${stock_data['current_price']:.2f}"
     price_width, price_height = get_text_dimensions(price_str, price_font)
-    price_x = 2
-    price_y = ticker_y + ticker_height + 1
-    draw.text((price_x, price_y), price_str, font=price_font, fill=(255, 255, 255))
+    draw.text((10, ticker_height + 2), price_str, font=price_font, fill=(255, 255, 255))
 
     # Render dollar change
     change_dollar_str = f"${stock_data['dollar_change']:.2f}"
     change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
     change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
-    change_dollar_x = width - change_dollar_width - 2
-    change_dollar_y = 2
-    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
+    draw.text((width - change_dollar_width - 10, 2), change_dollar_str, font=change_font, fill=change_color)
 
     # Render % change
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
     change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
-    change_percent_x = width - change_percent_width - 2
-    change_percent_y = change_dollar_y + change_dollar_height + 1
-    draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
+    draw.text((width - change_percent_width - 10, change_dollar_height + 2), change_percent_str, font=change_font, fill=change_color)
 
-    # Calculate start_y for the chart based on where the last text is drawn
-    total_text_height = change_percent_y + change_percent_height
-    margin = 2  # Define margin after the text
-    chart_start_y = total_text_height + margin
+    # Calculate start_y for the chart
+    chart_start_y = ticker_height + price_height + change_dollar_height + change_percent_height + 4
 
-    # Draw the stock chart on the matrix image
+    # Draw the stock chart on the matrix
     draw_chart_on_matrix(draw, stock_data['daily_close_prices'], chart_start_y)
 
     # Display on matrix
@@ -103,3 +95,4 @@ def render_stock_on_matrix(ticker='AAPL'):
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL')
+
