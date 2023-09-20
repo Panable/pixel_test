@@ -1,15 +1,15 @@
-## Nexel: A Python Version of the Tidbyt
+# Nexel: A Python Version of the Tidbyt
 
-# Overview
+## Overview
 
 This project is a custom, Python version of the Tidbyt because I'm too cheap to buy one for myself (plus I thought it would be fun). Using a combination of Pillow, Python, RGBMatrix, and Numpy to render text and images.
 
-# Hardware
+## Hardware
 
 This project is currently setup for a [Waveshare 64x32 Matrix](https://www.waveshare.com/rgb-matrix-p3-64x32.htm), a [Raspberry Pi Zero 2 WH](https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/) with pre-soldered headers as I'm lazy and terrible at soldering, and an [Adafruit Bonnet](https://www.adafruit.com/product/3211) to make things easier. If you feel inclined, you could pinout the matrix to your Pi manually, but that's out of the scope of this document. More information re wiring can be found on [hzeller's repo](https://github.com/hzeller/rpi-rgb-led-matrix).
 
 
-# How it works (software)
+## How it works (software)
 
 1. **Matrix Initialization**: First, we setup LED Matrix with desired configuration. I'm currently just using a single 64x32 matrix display, but there's nothing stopping you chaining multiple together if you wanted.
 
@@ -50,15 +50,15 @@ image_np = np.array(matrix_img)
 image_np_resized(Image.fromarray(image_np).resize((width, height), Image.NEAREST))
 ```
 
-# Actually getting the display to work with the Adafruit:
 
+## Actually getting the display to work with the Adafruit:
 Overall, pretty easy once you've got the code setup. Just run
 ```
 sudo python3 main.py --led-gpio-mapping=adafruit-hat
 ```
 
 
-# Caveats:
+## Caveats:
 
 There are a lot as I'm early into this. 
 
