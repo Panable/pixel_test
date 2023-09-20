@@ -12,7 +12,7 @@ import os
 #        return None
 
 # Fetch API key
-API_KEY = ""
+API_KEY = "c0d72699800845e7764a1550b079eb58"
 
 #if API_KEY:
 #    print(f"API Key: {API_KEY}")
