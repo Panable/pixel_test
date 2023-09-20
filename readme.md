@@ -1,4 +1,4 @@
-# Nexel: A Python Version of the Tidbyt
+# A Python Version of the Tidbyt
 
 ## Overview
 
