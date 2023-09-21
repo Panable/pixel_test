@@ -81,7 +81,7 @@ def render_time_and_weather_on_matrix():
     frame_canvas = matrix.CreateFrameCanvas()
     frame_canvas.SetImage(pil_image)
     matrix.SwapOnVSync(frame_canvas)
-       pil_image = Image(image=pil_image) 
+    pil_image = Image(image=pil_image) 
         frame_canvas = matrix.CreateFrameCanvas()
         frame_canvas.SetImage(pil_image)
         matrix.SwapOnVSync(frame_canvas)
