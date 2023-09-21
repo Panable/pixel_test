@@ -56,8 +56,10 @@ def render_time_and_weather_on_matrix():
             draw(matrix_img)
             
             # Convert Wand image to PIL image for the matrix display
+            
             with io.BytesIO() as output:
-                matrix_img.save(file=output, format="PNG")
+                matrix_img.format = 'PNG'
+                matrix_img.save(file=output)
                 output.seek(0)
                 pil_image = PILImage.open(output).convert('RGB')
               
