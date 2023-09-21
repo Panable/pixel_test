@@ -1,6 +1,8 @@
-from PIL import Image, ImageDraw, ImageFont
+from wand.image import Image
+from wand.drawing import Drawing
+from wand.color import Color
+from datetime import datetime
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-import time
 
 # Init matrix
 options = RGBMatrixOptions()
@@ -13,27 +15,38 @@ matrix = RGBMatrix(options=options)
 
 # Always render in 64x32
 width, height = 64, 32
-font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
-time_font_size = 12
-time_font = ImageFont.truetype(font_path, time_font_size)
 
-matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
-draw = ImageDraw.Draw(matrix_img)
+def get_current_time():
+    current_time = datetime.now()
+    hour = current_time.hour
+    minute = current_time.minute
+    return str(hour).zfill(2), str(minute).zfill(2)
 
-# Display the time ...
-full_time = "12:34"  # Static time for testing
-text_width, text_height = draw.textsize(full_time, font=time_font)
-x_position_time = (width - text_width) / 2
-y_position_time = (height - text_height) / 2
+def render_time_with_wand():
+    hour, minute = get_current_time()
+    full_time = f"{hour}:{minute}"
+    
+    with Image(width=width, height=height, background=Color('black')) as img:
+        with Drawing() as draw:
+            draw.font = '/usr/local/share/fonts/DinaRemaster-Regular-01.ttf'  # Adjust path as necessary
+            draw.font_size = 12
+            draw.fill_color = Color('white')
+            draw.text_alignment = 'center'
+            draw.text(int(width/2), 14, full_time)
+            draw(img)
 
-draw.text((x_position_time, y_position_time), full_time, font=time_font, fill=(255, 255, 255))
-matrix.SetImage(matrix_img)
+        # Save to a temporary file because the RGBMatrix library reads from a file path
+        temp_path = "/tmp/current_time.png"
+        img.save(filename=temp_path)
+        matrix.SetImage(temp_path)
 
-try:
-    while True:
-        time.sleep(10)  # Just keeping the loop running without doing anything
-except KeyboardInterrupt:
-    print("Exiting...")
-finally:
-    matrix.Clear()
+if __name__ == "__main__":
+    try:
+        while True:
+            render_time_with_wand()
+            time.sleep(30)
+    except KeyboardInterrupt:
+        print("Exiting...")
+    finally:
+        matrix.Clear()
 
