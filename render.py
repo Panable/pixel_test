@@ -42,7 +42,7 @@ def get_time_from_api(timezone="Australia/Sydney"):
 
 
 def render_time_and_weather_on_matrix():
-    matrix_img = PILImage.new('RGB', (width, height))
+    matrix_img = WandImage(width=width, height=height, background=Color('black'))
     draw = Drawing()
     draw.font = font_path
     draw.font_size = time_font_size
@@ -79,11 +79,10 @@ def render_time_and_weather_on_matrix():
         draw(matrix_img)
 
     # Update the matrix ...
-    pil_image = Image(image=pil_image) 
+    pil_image = PILImage.open(io.BytesIO(pil_image))
     frame_canvas = matrix.CreateFrameCanvas()
     frame_canvas.SetImage(pil_image)
     matrix.SwapOnVSync(frame_canvas)
-
 # Main loop ...
 
 if __name__ == "__main__":
