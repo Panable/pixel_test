@@ -49,17 +49,16 @@ def render_time_and_weather_on_matrix():
             # Display the time ...
             hour, minute = get_time_from_api()
             full_time = f"{hour}:{minute}"
-
+            
             text_metrics = draw.get_font_metrics(matrix_img, full_time, False)
             text_width = text_metrics.text_width
             text_height = text_metrics.text_height
             
-            x_position_time = (width - text_width) / 2
+            x_position_time = int((width - text_width) / 2)  # Convert to integer
             y_position_time = 2  # Small offset from the top
-
-            draw.text(x_position_time, y_position_time + text_height, full_time)
+            
+            draw.text(x_position_time, int(y_position_time + text_height), full_time)  # Convert y_position to integer
             draw(matrix_img)
-
             # Fetch and display the weather information
             weather_icon_path, temperature = get_weather()
             with Image(filename=weather_icon_path) as icon:
