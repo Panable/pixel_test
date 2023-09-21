@@ -54,5 +54,7 @@ if __name__ == "__main__":
             render_time_on_matrix()
             time.sleep(30)  # Update every 30 seconds. Adjust as needed.
     except KeyboardInterrupt:
-        print("
+        print("Exiting...")
+    finally:
+        matrix.Clear()
 
