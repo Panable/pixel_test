@@ -43,17 +43,17 @@ def get_time_from_api(timezone="Australia/Sydney"):
 def render_time_and_weather_on_matrix():
     with WandImage(width=width, height=height, background=Color('black')) as matrix_img:
         with Drawing() as draw:
-            draw.font = 'DinaRemaster-Regular'  # Replace this with the exact name from ImageMagick if different
-            draw.font_size = time_font_size
-            
-            # Display the time
-            hour, minute = get_time_from_api()
-            full_time = f"{hour}:{minute}"
-            text_metrics = draw.get_font_metrics(matrix_img, full_time)
-            text_width = text_metrics.text_width
-            x_position_time = (width - text_width) / 2
-            y_position_time = 2  # Small offset from the top
-            draw.text(int(x_position_time), int(y_position_time + text_metrics.text_height), full_time)
+#            draw.font = 'DinaRemaster-Regular'  # Replace this with the exact name from ImageMagick if different
+#            draw.font_size = time_font_size
+#            
+#            # Display the time
+#            hour, minute = get_time_from_api()
+#            full_time = f"{hour}:{minute}"
+#            text_metrics = draw.get_font_metrics(matrix_img, full_time)
+#            text_width = text_metrics.text_width
+#            x_position_time = (width - text_width) / 2
+#            y_position_time = 2  # Small offset from the top
+#            draw.text(int(x_position_time), int(y_position_time + text_metrics.text_height), full_time)
             
             matrix_img = Image(width=width, height=height, background=Color('black'))
             draw = Drawing()
