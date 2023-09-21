@@ -1,9 +1,10 @@
-
+from wand.image import Image as WandImage
 from wand.image import Image
 from wand.color import Color
 from wand.drawing import Drawing
 from wand.compat import nested
 import numpy as np
+from PIL import Image as PILImage, ImageDraw, ImageFont
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 import time
 from getweather import get_weather
@@ -18,6 +19,7 @@ options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'
 matrix = RGBMatrix(options=options)
 
+time_font_size = 12
 width, height = 64, 32
 font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
 
@@ -40,7 +42,7 @@ def get_time_from_api(timezone="Australia/Sydney"):
 
 
 def render_time_and_weather_on_matrix():
-    matrix_img = Image.new('RGB', (width, height))
+    matrix_img = PILImage.new('RGB', (width, height))
     draw = Drawing()
     draw.font = font_path
     draw.font_size = time_font_size
@@ -77,14 +79,10 @@ def render_time_and_weather_on_matrix():
         draw(matrix_img)
 
     # Update the matrix ...
-    pil_image = Image.fromarray(np.array(matrix_img))
+    pil_image = Image(image=pil_image) 
     frame_canvas = matrix.CreateFrameCanvas()
     frame_canvas.SetImage(pil_image)
     matrix.SwapOnVSync(frame_canvas)
-    pil_image = Image(image=pil_image) 
-        frame_canvas = matrix.CreateFrameCanvas()
-        frame_canvas.SetImage(pil_image)
-        matrix.SwapOnVSync(frame_canvas)
 
 # Main loop ...
 

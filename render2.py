@@ -1,4 +1,4 @@
-
+import time
 from wand.image import Image
 from wand.drawing import Drawing
 from wand.color import Color
@@ -12,7 +12,7 @@ OPTIONS = RGBMatrixOptions()
 OPTIONS.rows = 64
 OPTIONS.chain_length = 1
 OPTIONS.parallel = 1
-OPTIONS.hardware_mapping = 'regular'
+OPTIONS.hardware_mapping = 'adafruit-hat'
 OPTIONS.gpio_slowdown = 2
 matrix = RGBMatrix(options=OPTIONS)
 
