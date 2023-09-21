@@ -28,6 +28,7 @@ def get_text_dimensions(text_string, font):
     return (text_width, text_height)
 
 
+
 def render_time_and_weather_on_matrix():
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
@@ -45,17 +46,22 @@ def render_time_and_weather_on_matrix():
     icon = Image.open(weather_icon_path)
     icon_width, icon_height = icon.size
     
-    x_position_icon = (width - icon_width) / 2
-    y_position_icon = (height + y_position_time + text_height - icon_height) / 2
-    matrix_img.paste(icon, (int(x_position_icon), int(y_position_icon)))
-
-    temperature_str = f"{temperature}°C"  # Change to °F if you use Fahrenheit
+    temperature_str = f"{temperature}°C"
     temp_text_width, temp_text_height = get_text_dimensions(temperature_str, time_font)
-    x_position_temp = x_position_icon + icon_width + 2  # 2 pixels gap
+    
+    gap = 2  # Gap between icon and temperature text
+    combined_width = icon_width + temp_text_width + gap
+    
+    x_position_combined = (width - combined_width) / 2
+    y_position_icon = (height + y_position_time + text_height - icon_height) / 2
+    
+    matrix_img.paste(icon, (int(x_position_combined), int(y_position_icon)))
+    
+    x_position_temp = x_position_combined + icon_width + gap
     y_position_temp = y_position_icon + (icon_height - temp_text_height) / 2
     draw.text((x_position_temp, y_position_temp), temperature_str, font=time_font, fill=(255, 255, 255))
 
-    # Update the matrix
+    # Update the matrix ...
     frame_canvas = matrix.CreateFrameCanvas()
     frame_canvas.SetImage(matrix_img)
     matrix.SwapOnVSync(frame_canvas)
