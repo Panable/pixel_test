@@ -38,52 +38,50 @@ def get_time_from_api(timezone="Australia/Sydney"):
     hour, minute = time_str.split(":")[:2]
     return hour, minute
 
+
 def render_time_and_weather_on_matrix():
-    with Image(width=width, height=height, background=Color('black')) as matrix_img:
+    matrix_img = Image.new('RGB', (width, height))
+    draw = Drawing()
+    draw.font = font_path
+    draw.font_size = time_font_size
 
-        # Drawing setup
-        with Drawing() as draw:
-            draw.font = font_path
-            draw.font_size = 12
+    # Display the time ...
+    hour, minute = get_time_from_api()
+    full_time = f"{hour}:{minute}"
+    text_width = draw.get_font_metrics(matrix_img, full_time).text_width
+    x_position_time = int((width - text_width) / 2)
+    y_position_time = int(draw.get_font_metrics(matrix_img, full_time).ascender)
+    draw.text(x_position_time, y_position_time, full_time)
+    draw(matrix_img)
 
-            # Display the time ...
-            hour, minute = get_time_from_api()
-            full_time = f"{hour}:{minute}"
-            
-            text_metrics = draw.get_font_metrics(matrix_img, full_time, False)
-            text_width = text_metrics.text_width
-            text_height = text_metrics.text_height
-            
-            x_position_time = int((width - text_width) / 2)  # Convert to integer
-            y_position_time = 2  # Small offset from the top
-            
-            draw.text(x_position_time, int(y_position_time + text_height), full_time)  # Convert y_position to integer
-            draw(matrix_img)
-            # Fetch and display the weather information
-            weather_icon_path, temperature = get_weather()
-            icon = Image.open(weather_icon_path)
-            icon_width, icon_height = icon.size
-            
-            temperature_str = f"{temperature}°C"
-            
-            text_metrics_temp = draw.get_font_metrics(matrix_img, temperature_str, False)
-            temp_text_width = text_metrics_temp.text_width
-            temp_text_height = text_metrics_temp.text_height
-            
-            gap = 2  # Gap between icon and temperature text
-            combined_width = icon_width + temp_text_width + gap
-            
-            x_position_combined = int((width - combined_width) / 2)  # Convert to integer
-            y_position_icon = int((height + y_position_time + text_height - icon_height) / 2)  # Convert to integer
-            
-            matrix_img.composite(icon, left=int(x_position_combined), top=int(y_position_icon))
-            
-            x_position_temp = int(x_position_combined + icon_width + gap)  # Convert to integer
-            y_position_temp = int(y_position_icon + (icon_height - temp_text_height) / 2)  # Convert to integer
-            
-            draw.text(x_position_temp, int(y_position_temp + temp_text_height), temperature_str)  # Convert y_position to integer
-            draw(matrix_img)        # Convert Wand Image to PIL format and then update the matrix
-        pil_image = Image(image=pil_image) 
+    # Fetch and display the weather information
+    weather_icon_path, temperature = get_weather()
+    
+    with WandImage(filename=weather_icon_path) as icon:
+        icon_width = icon.width
+        icon_height = icon.height
+
+        temperature_str = f"{temperature}°C"
+        temp_text_width = draw.get_font_metrics(matrix_img, temperature_str).text_width
+        gap = 2  # Gap between icon and temperature text
+        combined_width = icon_width + temp_text_width + gap
+        
+        x_position_combined = (width - combined_width) / 2
+        y_position_icon = int((height + y_position_time - icon_height) / 2)
+        
+        matrix_img.composite(icon, left=int(x_position_combined), top=int(y_position_icon))
+
+        x_position_temp = int(x_position_combined + icon_width + gap)
+        y_position_temp = int(y_position_icon + (icon_height - time_font_size) / 2)
+        draw.text(x_position_temp, y_position_temp, temperature_str)
+        draw(matrix_img)
+
+    # Update the matrix ...
+    pil_image = Image.fromarray(np.array(matrix_img))
+    frame_canvas = matrix.CreateFrameCanvas()
+    frame_canvas.SetImage(pil_image)
+    matrix.SwapOnVSync(frame_canvas)
+       pil_image = Image(image=pil_image) 
         frame_canvas = matrix.CreateFrameCanvas()
         frame_canvas.SetImage(pil_image)
         matrix.SwapOnVSync(frame_canvas)
