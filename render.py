@@ -1,6 +1,6 @@
-
 from PIL import Image, ImageDraw
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
+import numpy as np
 import time
 
 # Init matrix
@@ -26,8 +26,11 @@ def render_square_on_matrix():
     # Draw the square
     draw.rectangle([(x_position, y_position), (x_position + square_size, y_position + square_size)], fill=(255, 255, 255))
 
+    # Convert the PIL Image to a numpy array
+    image_np = np.array(matrix_img)
+    
     frame_canvas = matrix.CreateFrameCanvas()
-    frame_canvas.SetImage(matrix_img)
+    frame_canvas.SetImage(Image.fromarray(image_np))
     matrix.SwapOnVSync(frame_canvas)
 
 if __name__ == "__main__":
