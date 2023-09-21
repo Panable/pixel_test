@@ -19,9 +19,7 @@ options.chain_length = 1
 options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'
 matrix = RGBMatrix(options=options)
-font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
 time_font_size = 12  # as a test
-time_font = Font(path=font_path, size=time_font_size)time_font_size = 12
 width, height = 64, 32
 font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
 
@@ -45,6 +43,7 @@ def get_time_from_api(timezone="Australia/Sydney"):
 
 
 def render_time_and_weather_on_matrix():
+    with WandImage(wi
     matrix_img = Image(width=width, height=height, background=Color('black'))
     draw = Drawing()
     draw.font = time_font
