@@ -25,22 +25,22 @@ def get_current_time():
 def render_time_with_wand():
     hour, minute = get_current_time()
     full_time = f"{hour}:{minute}"
-    
-    with Image(width=width, height=height, background=Color('black')) as img:
-        with Drawing() as draw:
-            draw.font = '/usr/local/share/fonts/DinaRemaster-Regular-01.ttf'  # Adjust path as necessary
-            draw.font_size = 12
-            draw.fill_color = Color('white')
-            draw.text_alignment = 'center'
-            draw.text(int(width/2), 14, full_time)
+   with Drawing() as draw:
+        with Image(width=64, height=32, background=Color("black")) as img:
+            draw.text((20, 10), get_time_from_api(), font='Arial', font_size=20, fill=Color("white"))
             draw(img)
+            
+            # Save to a temporary path
+            temp_path = "/tmp/temp_image.png"
+            img.save(filename=temp_path)
+            
+            # Load with PIL
+            pil_image = PILImage.open(temp_path)
+            
+            # Set the image to the matrix using PIL's Image object
+            matrix.SetImage(pil_image)   
 
-        # Save to a temporary file because the RGBMatrix library reads from a file path
-        temp_path = "/tmp/current_time.png"
-        img.save(filename=temp_path)
-        matrix.SetImage(temp_path)
-
-if __name__ == "__main__":
+ if __name__ == "__main__":
     try:
         while True:
             render_time_with_wand()
