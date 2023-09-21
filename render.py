@@ -1,4 +1,8 @@
-from PIL import Image, ImageDraw, ImageFont
+
+from wand.image import Image
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.compat import nested
 import numpy as np
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 import time
@@ -14,11 +18,8 @@ options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'
 matrix = RGBMatrix(options=options)
 
-# Always render in 64x32
 width, height = 64, 32
 font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
-time_font_size = 12  # as a test
-time_font = ImageFont.truetype(font_path, time_font_size)
 
 def get_time_from_api(timezone="Australia/Sydney"):
     """Fetches the current time for the given timezone using the WorldTimeAPI."""
@@ -31,55 +32,63 @@ def get_time_from_api(timezone="Australia/Sydney"):
     data = response.json()
     current_datetime = data['datetime']  
     
-    # Extract just the date and time (without milliseconds)
     date_str, time_str = current_datetime.split('T')
     time_str = time_str.split('.')[0]
     
     hour, minute = time_str.split(":")[:2]
     return hour, minute
 
-def get_text_dimensions(text_string, font):
-    ascent, descent = font.getmetrics()
-    text_width = font.getmask(text_string).getbbox()[2]
-    text_height = font.getmask(text_string).getbbox()[3] + descent
-    return (text_width, text_height)
-
 def render_time_and_weather_on_matrix():
-    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
-    draw = ImageDraw.Draw(matrix_img)
+    with Image(width=width, height=height, background=Color('black')) as matrix_img:
 
-    # Display the time ...
-    hour, minute = get_time_from_api()
-    full_time = f"{hour}:{minute}"
-    text_width, text_height = get_text_dimensions(full_time, time_font)
-    x_position_time = (width - text_width) / 2
-    y_position_time = 2  # Small offset from the top
-    draw.text((x_position_time, y_position_time), full_time, font=time_font, fill=(255, 255, 255))
+        # Drawing setup
+        with Drawing() as draw:
+            draw.font = font_path
+            draw.font_size = 12
 
-    # Fetch and display the weather information
-    weather_icon_path, temperature = get_weather()
-    icon = Image.open(weather_icon_path)
-    icon_width, icon_height = icon.size
-    
-    temperature_str = f"{temperature}°C"
-    temp_text_width, temp_text_height = get_text_dimensions(temperature_str, time_font)
-    
-    gap = 2  # Gap between icon and temperature text
-    combined_width = icon_width + temp_text_width + gap
-    
-    x_position_combined = (width - combined_width) / 2
-    y_position_icon = (height + y_position_time + text_height - icon_height) / 2
-    
-    matrix_img.paste(icon, (int(x_position_combined), int(y_position_icon)))
-    
-    x_position_temp = x_position_combined + icon_width + gap
-    y_position_temp = y_position_icon + (icon_height - temp_text_height) / 2
-    draw.text((x_position_temp, y_position_temp), temperature_str, font=time_font, fill=(255, 255, 255))
+            # Display the time ...
+            hour, minute = get_time_from_api()
+            full_time = f"{hour}:{minute}"
 
-    # Update the matrix ...
-    frame_canvas = matrix.CreateFrameCanvas()
-    frame_canvas.SetImage(matrix_img)
-    matrix.SwapOnVSync(frame_canvas)
+            text_metrics = draw.get_font_metrics(matrix_img, full_time, False)
+            text_width = text_metrics.text_width
+            text_height = text_metrics.text_height
+            
+            x_position_time = (width - text_width) / 2
+            y_position_time = 2  # Small offset from the top
+
+            draw.text(x_position_time, y_position_time + text_height, full_time)
+            draw(matrix_img)
+
+            # Fetch and display the weather information
+            weather_icon_path, temperature = get_weather()
+            with Image(filename=weather_icon_path) as icon:
+                icon_width, icon_height = icon.size[0], icon.size[1]
+                
+                temperature_str = f"{temperature}°C"
+                text_metrics_temp = draw.get_font_metrics(matrix_img, temperature_str, False)
+                temp_text_width = text_metrics_temp.text_width
+                temp_text_height = text_metrics_temp.text_height
+
+                gap = 2  # Gap between icon and temperature text
+                combined_width = icon_width + temp_text_width + gap
+
+                x_position_combined = (width - combined_width) / 2
+                y_position_icon = (height + y_position_time + text_height - icon_height) / 2
+
+                matrix_img.composite(icon, left=int(x_position_combined), top=int(y_position_icon))
+
+                x_position_temp = x_position_combined + icon_width + gap
+                y_position_temp = y_position_icon + (icon_height - temp_text_height) / 2
+
+                draw.text(x_position_temp, y_position_temp + temp_text_height, temperature_str)
+                draw(matrix_img)
+
+        # Convert Wand Image to PIL format and then update the matrix
+        pil_image = Image(image=pil_image) 
+        frame_canvas = matrix.CreateFrameCanvas()
+        frame_canvas.SetImage(pil_image)
+        matrix.SwapOnVSync(frame_canvas)
 
 # Main loop ...
 
@@ -87,7 +96,7 @@ if __name__ == "__main__":
     try:
         while True:
             render_time_and_weather_on_matrix()
-            time.sleep(30)  # Update every 30 seconds. Adjust as needed.
+            time.sleep(30)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
