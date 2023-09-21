@@ -34,7 +34,7 @@ def render_time_with_wand():
 
         # Calculate the position to center the text
         metrics = draw.get_font_metrics(img, time_str)
-        x_position_time = int((WIDTH - metrics.text_width) / 2)
+        x_position_time = max(0, int((WIDTH - metrics.text_width) / 2))
         y_position_time = int((HEIGHT - metrics.text_height) / 2 + metrics.ascender)  # Centred vertically
 
         # Draw the time
@@ -54,4 +54,3 @@ def render_time_with_wand():
 
 while True:
     render_time_with_wand()
-
