@@ -1,9 +1,10 @@
+
 import time
 from wand.image import Image
 from wand.drawing import Drawing
 from wand.color import Color
-from datetime import datetime
 import io
+import requests
 from PIL import Image as PILImage
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -21,6 +22,14 @@ WIDTH = matrix.width
 HEIGHT = matrix.height
 FONT_PATH = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
 
+def get_time_from_api():
+    response = requests.get('http://worldtimeapi.org/api/timezone/Etc/UTC')
+    data = response.json()
+    datetime_str = data['datetime']
+    # Extracting the time from the datetime string
+    time_str = datetime_str[11:19]
+    return time_str
+
 def render_time_with_wand():
     with Image(width=WIDTH, height=HEIGHT, background=Color("black")) as img:
         # Configure the draw settings
@@ -29,8 +38,8 @@ def render_time_with_wand():
         draw.font_size = 30
         draw.fill_color = Color("white")
 
-        # Get the current time
-        time_str = datetime.now().strftime("%H:%M:%S")
+        # Get the current time from API
+        time_str = get_time_from_api()
 
         # Calculate the position to center the text
         metrics = draw.get_font_metrics(img, time_str)
@@ -50,7 +59,8 @@ def render_time_with_wand():
             pil_image = PILImage.open(temp_buffer).convert('RGB')
             matrix.SetImage(pil_image)
 
-    time.sleep(1)
+    time.sleep(60)  # Update every 60 seconds since we're fetching from an API
 
 while True:
     render_time_with_wand()
+
