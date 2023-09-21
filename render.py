@@ -1,7 +1,9 @@
-from PIL import Image, ImageDraw, ImageFont
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-# Initialization
+from PIL import Image, ImageDraw
+from rgbmatrix import RGBMatrix, RGBMatrixOptions
+import time
+
+# Init matrix
 options = RGBMatrixOptions()
 options.rows = 32
 options.cols = 64
@@ -9,20 +11,30 @@ options.chain_length = 1
 options.parallel = 1
 matrix = RGBMatrix(options=options)
 
-while True:
-    # Create a blank canvas
-    matrix_img = Image.new('RGB', (64, 32), color=(0, 0, 0))
+# Always render in 64x32
+width, height = 64, 32
+
+def render_square_on_matrix():
+    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
 
-    # Use a different font or check if the font path is correct
-    font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
-    font = ImageFont.truetype(font_path, 12) 
+    # Define square dimensions
+    square_size = 20
+    x_position = (width - square_size) / 2
+    y_position = (height - square_size) / 2
 
-    # Draw static text
-    draw.text((0, 0), "12:34", font=font, fill=(255, 255, 255))
+    # Draw the square
+    draw.rectangle([(x_position, y_position), (x_position + square_size, y_position + square_size)], fill=(255, 255, 255))
 
-    # Display on matrix
     frame_canvas = matrix.CreateFrameCanvas()
     frame_canvas.SetImage(matrix_img)
     matrix.SwapOnVSync(frame_canvas)
+
+if __name__ == "__main__":
+    try:
+        while True:
+            render_square_on_matrix()
+            time.sleep(1)  # Render a new square every second
+    except KeyboardInterrupt:
+        print("Rendering terminated by user.")
 
