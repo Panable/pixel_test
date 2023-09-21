@@ -3,6 +3,7 @@ from wand.image import Image
 from wand.color import Color
 from wand.drawing import Drawing
 from wand.compat import nested
+from wand.font import Font
 import numpy as np
 from PIL import Image as PILImage, ImageDraw, ImageFont
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
@@ -18,8 +19,9 @@ options.chain_length = 1
 options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'
 matrix = RGBMatrix(options=options)
-
-time_font_size = 12
+font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
+time_font_size = 12  # as a test
+time_font = Font(path=font_path, size=time_font_size)time_font_size = 12
 width, height = 64, 32
 font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
 
