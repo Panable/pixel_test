@@ -61,29 +61,28 @@ def render_time_and_weather_on_matrix():
             draw(matrix_img)
             # Fetch and display the weather information
             weather_icon_path, temperature = get_weather()
-            with Image(filename=weather_icon_path) as icon:
-                icon_width, icon_height = icon.size[0], icon.size[1]
-                
-                temperature_str = f"{temperature}°C"
-                text_metrics_temp = draw.get_font_metrics(matrix_img, temperature_str, False)
-                temp_text_width = text_metrics_temp.text_width
-                temp_text_height = text_metrics_temp.text_height
-
-                gap = 2  # Gap between icon and temperature text
-                combined_width = icon_width + temp_text_width + gap
-
-                x_position_combined = (width - combined_width) / 2
-                y_position_icon = (height + y_position_time + text_height - icon_height) / 2
-
-                matrix_img.composite(icon, left=int(x_position_combined), top=int(y_position_icon))
-
-                x_position_temp = x_position_combined + icon_width + gap
-                y_position_temp = y_position_icon + (icon_height - temp_text_height) / 2
-
-                draw.text(x_position_temp, y_position_temp + temp_text_height, temperature_str)
-                draw(matrix_img)
-
-        # Convert Wand Image to PIL format and then update the matrix
+            icon = Image.open(weather_icon_path)
+            icon_width, icon_height = icon.size
+            
+            temperature_str = f"{temperature}°C"
+            
+            text_metrics_temp = draw.get_font_metrics(matrix_img, temperature_str, False)
+            temp_text_width = text_metrics_temp.text_width
+            temp_text_height = text_metrics_temp.text_height
+            
+            gap = 2  # Gap between icon and temperature text
+            combined_width = icon_width + temp_text_width + gap
+            
+            x_position_combined = int((width - combined_width) / 2)  # Convert to integer
+            y_position_icon = int((height + y_position_time + text_height - icon_height) / 2)  # Convert to integer
+            
+            matrix_img.composite(icon, left=int(x_position_combined), top=int(y_position_icon))
+            
+            x_position_temp = int(x_position_combined + icon_width + gap)  # Convert to integer
+            y_position_temp = int(y_position_icon + (icon_height - temp_text_height) / 2)  # Convert to integer
+            
+            draw.text(x_position_temp, int(y_position_temp + temp_text_height), temperature_str)  # Convert y_position to integer
+            draw(matrix_img)        # Convert Wand Image to PIL format and then update the matrix
         pil_image = Image(image=pil_image) 
         frame_canvas = matrix.CreateFrameCanvas()
         frame_canvas.SetImage(pil_image)
