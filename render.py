@@ -1,9 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from gettime import get_current_time
 import time
 from getweather import get_weather
+import requests
 
 # Init matrix
 options = RGBMatrixOptions()
@@ -20,6 +20,23 @@ font_path = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
 time_font_size = 12  # as a test
 time_font = ImageFont.truetype(font_path, time_font_size)
 
+def get_time_from_api(timezone="Australia/Sydney"):
+    """Fetches the current time for the given timezone using the WorldTimeAPI."""
+    
+    response = requests.get(f"http://worldtimeapi.org/api/timezone/{timezone}")
+    
+    if response.status_code != 200:
+        raise Exception("Failed to fetch time from the API")
+    
+    data = response.json()
+    current_datetime = data['datetime']  
+    
+    # Extract just the date and time (without milliseconds)
+    date_str, time_str = current_datetime.split('T')
+    time_str = time_str.split('.')[0]
+    
+    hour, minute = time_str.split(":")[:2]
+    return hour, minute
 
 def get_text_dimensions(text_string, font):
     ascent, descent = font.getmetrics()
@@ -27,14 +44,12 @@ def get_text_dimensions(text_string, font):
     text_height = font.getmask(text_string).getbbox()[3] + descent
     return (text_width, text_height)
 
-
-
 def render_time_and_weather_on_matrix():
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
 
     # Display the time ...
-    hour, minute = get_current_time()
+    hour, minute = get_time_from_api()
     full_time = f"{hour}:{minute}"
     text_width, text_height = get_text_dimensions(full_time, time_font)
     x_position_time = (width - text_width) / 2
@@ -77,3 +92,4 @@ if __name__ == "__main__":
         print("Exiting...")
     finally:
         matrix.Clear()
+
