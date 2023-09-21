@@ -1,8 +1,11 @@
-from wand.image import Image
+from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from wand.image import Image as WandImage
 from wand.drawing import Drawing
 from wand.color import Color
-from datetime import datetime
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from PIL import Image as PILImage
+import requests
+import io
+import time
 
 # Init matrix
 options = RGBMatrixOptions()
@@ -13,38 +16,52 @@ options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'
 matrix = RGBMatrix(options=options)
 
-# Always render in 64x32
-width, height = 64, 32
+# Constants
+FONT_PATH = "/usr/local/share/fonts/DinaRemaster-Regular-01.ttf"
+WIDTH, HEIGHT = 64, 32
 
-def get_current_time():
-    current_time = datetime.now()
-    hour = current_time.hour
-    minute = current_time.minute
-    return str(hour).zfill(2), str(minute).zfill(2)
+def get_time_from_api(timezone="Australia/Sydney"):
+    """Fetches the current time for the given timezone using the WorldTimeAPI."""
+    response = requests.get(f"http://worldtimeapi.org/api/timezone/{timezone}")
+    response.raise_for_status()
+    data = response.json()
+    current_datetime = data['datetime']
+    date_str, time_str = current_datetime.split('T')
+    time_str = time_str.split('.')[0]
+    hour, minute = time_str.split(":")[:2]
+    return f"{hour}:{minute}"
 
 def render_time_with_wand():
-    hour, minute = get_current_time()
-    full_time = f"{hour}:{minute}"
-   with Drawing() as draw:
-        with Image(width=64, height=32, background=Color("black")) as img:
-            draw.text((20, 10), get_time_from_api(), font='Arial', font_size=20, fill=Color("white"))
+    with WandImage(width=WIDTH, height=HEIGHT, background=Color('black')) as img:
+        with Drawing() as draw:
+            draw.font = FONT_PATH
+            draw.font_size = 20  # Initial font size
+            time_str = get_time_from_api()
+            
+            # Calculate the bounding box for the text
+            metrics = draw.get_font_metrics(img, time_str)
+            while metrics.text_width > WIDTH or metrics.text_height > HEIGHT:
+                draw.font_size -= 1
+                metrics = draw.get_font_metrics(img, time_str)
+                
+            x_position_time = (WIDTH - metrics.text_width) / 2
+            y_position_time = (HEIGHT - metrics.text_height) / 2 + metrics.ascender  # Centred vertically
+            
+            draw.text(x_position_time, y_position_time, time_str)
             draw(img)
-            
-            # Save to a temporary path
-            temp_path = "/tmp/temp_image.png"
-            img.save(filename=temp_path)
-            
-            # Load with PIL
-            pil_image = PILImage.open(temp_path)
-            
-            # Set the image to the matrix using PIL's Image object
-            matrix.SetImage(pil_image)   
+        
+        # Convert Wand image to PIL Image for RGBMatrix
+        with io.BytesIO() as temp_buffer:
+            img.save(file=temp_buffer)
+            temp_buffer.seek(0)
+            pil_image = PILImage.open(temp_buffer)
+            matrix.SetImage(pil_image)
 
- if __name__ == "__main__":
+if __name__ == "__main__":
     try:
         while True:
             render_time_with_wand()
-            time.sleep(30)
+            time.sleep(60)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
