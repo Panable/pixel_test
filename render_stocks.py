@@ -80,37 +80,38 @@ def render_stock_on_matrix(ticker='AAPL'):
     ticker_y = 2 
     draw.text((ticker_x, ticker_y), ticker_str, font=ticker_font, fill=(255, 255, 255))
 
-    # Render current price
-    price_str = f"${stock_data['current_price']:.2f}"
-    price_width, price_height = get_text_dimensions(price_str, price_font)
-    price_x = 10
-    price_y = ticker_y + ticker_height + 2
-    draw.text((price_x, price_y), price_str, font=price_font, fill=(255, 255, 255))
-
-    # Render dollar change
-    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
-    change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
-    change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
-    change_dollar_x = width - change_dollar_width - 15  # Positioned near the right edge, adjust as needed
-    change_dollar_y = price_y + price_height + 2
-    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
-
-    # Render % change
+    # Render % change right next to the ticker name
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
+    change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
     change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
-    change_percent_x = change_dollar_x - change_percent_width - 5  # Positioned to the left of dollar change with 5px gap
-    change_percent_y = change_dollar_y
+    change_percent_x = ticker_x + ticker_width + 5  # Positioned to the right of the ticker name with 5px gap
+    change_percent_y = ticker_y
     draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
 
+    # Render dollar change below the ticker name and % change
+    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
+    change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
+    change_dollar_x = ticker_x  # Positioned right below the ticker
+    change_dollar_y = ticker_y + ticker_height + 2
+    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
+
+    # Render current price below the dollar change
+    price_str = f"${stock_data['current_price']:.2f}"
+    price_width, price_height = get_text_dimensions(price_str, price_font)
+    price_x = ticker_x  # Aligned with the ticker on the left
+    price_y = change_dollar_y + change_dollar_height + 2
+    draw.text((price_x, price_y), price_str, font=price_font, fill=(255, 255, 255))
+
     # Calculate start_y for the chart based on where the last text is drawn
-    chart_start_y = change_dollar_y + change_dollar_height + 2
+    chart_start_y = price_y + price_height + 2
 
     if stock_data['dollar_change'] >= 0:
-        polygon_color = (0, 255, 0) # green for stock go brrr
-        line_color = (127, 255, 127) # follow line light green
+        polygon_color = (0, 255, 0)  # green for positive change
+        line_color = (127, 255, 127)  # lighter green for the line
     else:
-        polygon_color = (255, 0, 0) # Red for upside-down version of up
-        line_color = (255, 127, 127) # Light red to follow
+        polygon_color = (255, 0, 0)  # red for negative change
+        line_color = (255, 127, 127)  # lighter red for the line
+
     # Draw the stock chart on the matrix image
     draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
 
@@ -120,3 +121,4 @@ def render_stock_on_matrix(ticker='AAPL'):
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL')
+
