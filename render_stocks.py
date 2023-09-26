@@ -36,10 +36,11 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     chart_area_height = chart_end_y - start_y
     chart_area_width = width
 
+    
     raw_scaled_prices = [
-            int(((price - min_price) / (max_price - min_price)) * chart_area_height)
-            for price in daily_close_prices
-    ]
+        int(((price - min_price) / (max_price - min_price)) * (chart_area_height - start_y))
+        for price in daily_close_prices
+]
 
     scaled_prices = [start_y + price for price in raw_scaled_prices]
     x_interval = chart_area_width / (len(scaled_prices) - 1)
@@ -87,15 +88,15 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_dollar_str = f"${stock_data['dollar_change']:.2f}"
     change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
     change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
-    change_dollar_x = width - change_dollar_width - 10
+    change_dollar_x = width - change_dollar_width - 15
     change_dollar_y = price_y + price_height + 2
     draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
 
     # Render % change
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
     change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
-    change_percent_x = width - change_percent_width - 10
-    change_percent_y = change_dollar_y + change_dollar_height
+    change_percent_x = width - change_percent_width - 15
+    change_percent_y = change_dollar_y + change_dollar_height + 2
     draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
 
     # Calculate start_y for the chart based on where the last text is drawn
