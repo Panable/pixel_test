@@ -42,10 +42,9 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     padded_max_price = max_price + padding * (max_price - min_price)
     
     raw_scaled_prices = [
-        int(((price - padded_min_price) / (padded_max_price - padded_min_price)) * (chart_area_height - start_y))
+        start_y + int(((price - padded_min_price) / (padded_max_price - padded_min_price)) * chart_area_height)
         for price in daily_close_prices
-]
-
+    ]
     scaled_prices = [start_y + price for price in raw_scaled_prices]
     x_interval = chart_area_width / (len(scaled_prices) - 1)
 
@@ -106,7 +105,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     # Calculate start_y for the chart based on where the last text is drawn
     total_text_height = change_percent_y + change_percent_height
     margin = 2  # Define margin after the text
-    chart_start_y = change_percent_y + change_percent_height + margin 
+    chart_start_y = total_text_height + margin 
 
     # Color base on stock movement
     if stock_data['dollar_change'] >= 0:
