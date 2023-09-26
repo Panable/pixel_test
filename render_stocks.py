@@ -32,11 +32,11 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
 
-    chart_end_y = height - 2 
+    chart_end_y = height - 1 
     chart_area_height = chart_end_y - start_y
     chart_area_width = width
 
-    padding = 0.10  # 10% padding
+    padding = 0.05  # 10% padding
     padded_min_price = min_price - padding * (max_price - min_price)
     padded_max_price = max_price + padding * (max_price - min_price)
     
