@@ -37,7 +37,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
 
-    chart_end_y = height - 2 
+    chart_end_y = height - 1 
     chart_area_height = chart_end_y - start_y
     chart_area_width = width
 
@@ -92,7 +92,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
     change_percent_x = width - change_percent_width - right_margin
     change_percent_y = ticker_y
-    draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))
+    draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=(0, 0, 255) if stock_data['dollar_change'] >= 0 else (255, 0, 0))
 
     # Render current price below the ticker name
     price_str = f"${stock_data['current_price']:.2f}"
@@ -106,11 +106,11 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
     change_dollar_x = width - change_dollar_width - right_margin
     change_dollar_y = price_y
-    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))    # Calculate start_y for the chart based on where the last text is drawn
+    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=(0, 0, 255) if stock_data['dollar_change'] >= 0 else (255, 0, 0))    # Calculate start_y for the chart based on where the last text is drawn
     chart_start_y = price_y + price_height + 2
 
     if stock_data['dollar_change'] >= 0:
-        polygon_color = (0, 255, 0)  # green for positive change
+        polygon_color = (0, 0, 255)  # green for positive change
         line_color = (127, 255, 127)  # lighter green for the line
     else:
         polygon_color = (255, 0, 0)  # red for negative change
