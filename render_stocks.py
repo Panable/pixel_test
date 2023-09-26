@@ -36,23 +36,23 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     chart_area_height = chart_end_y - start_y
     chart_area_width = width
 
-   
     padding = 0.10  # 10% padding
     padded_min_price = min_price - padding * (max_price - min_price)
     padded_max_price = max_price + padding * (max_price - min_price)
     
     raw_scaled_prices = [
-        start_y + int(((price - padded_min_price) / (padded_max_price - padded_min_price)) * chart_area_height)
+        chart_area_height - int(((price - padded_min_price) / (padded_max_price - padded_min_price)) * chart_area_height)
         for price in daily_close_prices
     ]
+
     scaled_prices = [start_y + price for price in raw_scaled_prices]
     x_interval = chart_area_width / (len(scaled_prices) - 1)
 
-    polygon_points = [(0, height - 1)]
+    polygon_points = [(0, chart_end_y)]
     for i, price in enumerate(scaled_prices):
         x_pos = i * x_interval
         polygon_points.append((x_pos, price))
-    polygon_points.append((width-1, height - 1))
+    polygon_points.append((width-1, chart_end_y))
 
     draw.polygon(polygon_points, fill=polygon_color)
 
@@ -64,7 +64,6 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     print("First polygon point:", polygon_points[0])
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
-
 
 def render_stock_on_matrix(ticker='AAPL'):
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
