@@ -111,7 +111,7 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     if stock_data['dollar_change'] >= 0:
         polygon_color = (0, 0, 255)  # green for positive change
-        line_color = (127, 255, 127)  # lighter green for the line
+        line_color = (127, 126, 255)  # lighter green for the line
     else:
         polygon_color = (255, 0, 0)  # red for negative change
         line_color = (255, 127, 127)  # lighter red for the line
