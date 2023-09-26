@@ -31,6 +31,7 @@ def get_text_dimensions(text_string, font):
 
 
 
+
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
@@ -66,7 +67,6 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     print("First point:", scaled_prices[0])
     print("Some y-values:", scaled_prices[:5])
     return draw
-
 
 def render_stock_on_matrix(ticker='AAPL'):
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
