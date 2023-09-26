@@ -102,7 +102,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     # Calculate start_y for the chart based on where the last text is drawn
     total_text_height = change_percent_y + change_percent_height
     margin = 2  # Define margin after the text
-    chart_start_y = total_text_height + margin 
+    chart_start_y = change_percent_y + change_percent_height + margin 
 
     # Color base on stock movement
     if stock_data['dollar_change'] >= 0:
