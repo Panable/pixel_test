@@ -76,32 +76,35 @@ def render_stock_on_matrix(ticker='AAPL'):
     # Render stock ticker
     ticker_str = stock_data['ticker']
     ticker_width, ticker_height = get_text_dimensions(ticker_str, ticker_font)
-    ticker_x = 5
+    ticker_x = 2
     ticker_y = 2 
     draw.text((ticker_x, ticker_y), ticker_str, font=ticker_font, fill=(255, 255, 255))
 
-    # Render % change right next to the ticker name
+    # Calculate widths for % change and dollar change
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
-    change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
-    change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
-    change_percent_x = ticker_x + ticker_width + 5  # Positioned to the right of the ticker name with 5px gap
+    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
+    change_percent_width = get_text_dimensions(change_percent_str, change_font)[0]
+    change_dollar_width = get_text_dimensions(change_dollar_str, change_font)[0]
+
+    # Find the wider width to right-align both texts to this width
+    max_change_width = max(change_percent_width, change_dollar_width)
+
+    # Render % change right next to the ticker name, aligned to the right
+    change_percent_x = ticker_x + ticker_width + 10 + max_change_width - change_percent_width
     change_percent_y = ticker_y
-    draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
+    draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))
 
     # Render current price below the ticker name
     price_str = f"${stock_data['current_price']:.2f}"
     price_width, price_height = get_text_dimensions(price_str, price_font)
-    price_x = ticker_x  # Positioned right below the ticker
+    price_x = ticker_x
     price_y = ticker_y + ticker_height + 2
     draw.text((price_x, price_y), price_str, font=price_font, fill=(255, 255, 255))
 
-    # Render dollar change right next to the current price
-    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
-    change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
-    change_dollar_x = price_x + price_width + 5  # Positioned to the right of the current price with 5px gap
+    # Render dollar change right next to the current price, aligned to the right
+    change_dollar_x = price_x + price_width + 10 + max_change_width - change_dollar_width
     change_dollar_y = price_y
-    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
-
+    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))
     # Calculate start_y for the chart based on where the last text is drawn
     chart_start_y = price_y + price_height + 2
 
