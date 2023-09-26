@@ -55,7 +55,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     for i in range(1, len(scaled_prices)):
         start_point = ((i-1) * x_interval, scaled_prices[i-1])
         end_point = (i * x_interval, scaled_prices[i])
-        draw.line([start_point, end_point], fill=line_color, width=10)
+        draw.line([start_point, end_point], fill=line_color, width=1)
 
     print("First polygon point:", polygon_points[0])
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
@@ -80,7 +80,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     price_str = f"${stock_data['current_price']:.2f}"
     price_width, price_height = get_text_dimensions(price_str, price_font)
     price_x = 10
-    price_y = ticker_y + ticker_height
+    price_y = ticker_y + ticker_height + 2
     draw.text((price_x, price_y), price_str, font=price_font, fill=(255, 255, 255))
 
     # Render dollar change
@@ -88,7 +88,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
     change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
     change_dollar_x = width - change_dollar_width - 10
-    change_dollar_y = 2  
+    change_dollar_y = price_y + price_height + 2
     draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
 
     # Render % change
