@@ -73,6 +73,9 @@ def render_stock_on_matrix(ticker='AAPL'):
     stock_data = get_stock_data(ticker)
     print(stock_data)    
 
+    # Margin from the right edge
+    right_margin = 1
+
     # Render stock ticker
     ticker_str = stock_data['ticker']
     ticker_width, ticker_height = get_text_dimensions(ticker_str, ticker_font)
@@ -80,17 +83,10 @@ def render_stock_on_matrix(ticker='AAPL'):
     ticker_y = 2 
     draw.text((ticker_x, ticker_y), ticker_str, font=ticker_font, fill=(255, 255, 255))
 
-    # Calculate widths for % change and dollar change
+    # Render % change right next to the ticker name
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
-    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
-    change_percent_width = get_text_dimensions(change_percent_str, change_font)[0]
-    change_dollar_width = get_text_dimensions(change_dollar_str, change_font)[0]
-
-    # Find the wider width to right-align both texts to this width
-    max_change_width = max(change_percent_width, change_dollar_width)
-
-    # Render % change right next to the ticker name, aligned to the right
-    change_percent_x = ticker_x + ticker_width + 10 + max_change_width - change_percent_width
+    change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
+    change_percent_x = width - change_percent_width - right_margin
     change_percent_y = ticker_y
     draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))
 
@@ -101,11 +97,12 @@ def render_stock_on_matrix(ticker='AAPL'):
     price_y = ticker_y + ticker_height + 2
     draw.text((price_x, price_y), price_str, font=price_font, fill=(255, 255, 255))
 
-    # Render dollar change right next to the current price, aligned to the right
-    change_dollar_x = price_x + price_width + 10 + max_change_width - change_dollar_width
+    # Render dollar change right next to the current price
+    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
+    change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
+    change_dollar_x = width - change_dollar_width - right_margin
     change_dollar_y = price_y
-    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))
-    # Calculate start_y for the chart based on where the last text is drawn
+    draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=(0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0))    # Calculate start_y for the chart based on where the last text is drawn
     chart_start_y = price_y + price_height + 2
 
     if stock_data['dollar_change'] >= 0:
