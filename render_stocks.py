@@ -76,7 +76,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     # Render stock ticker
     ticker_str = stock_data['ticker']
     ticker_width, ticker_height = get_text_dimensions(ticker_str, ticker_font)
-    ticker_x = 10
+    ticker_x = 5
     ticker_y = 2 
     draw.text((ticker_x, ticker_y), ticker_str, font=ticker_font, fill=(255, 255, 255))
 
