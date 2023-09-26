@@ -114,6 +114,8 @@ def render_stock_on_matrix(ticker='AAPL'):
         polygon_color = (255, 0, 0)  # red for negative change
         line_color = (255, 127, 127)  # lighter red for the line
 
+    print("Polygon Color: ", polygon_color)
+    print("Line Color: ", line_color)
     # Draw the stock chart on the matrix image
     draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
 
