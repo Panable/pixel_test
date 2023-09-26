@@ -91,31 +91,20 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_dollar_str = f"${stock_data['dollar_change']:.2f}"
     change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
     change_dollar_width, change_dollar_height = get_text_dimensions(change_dollar_str, change_font)
-    change_dollar_x = width - change_dollar_width - 15
+    change_dollar_x = width - change_dollar_width - 15  # Positioned near the right edge, adjust as needed
     change_dollar_y = price_y + price_height + 2
     draw.text((change_dollar_x, change_dollar_y), change_dollar_str, font=change_font, fill=change_color)
 
     # Render % change
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
     change_percent_width, change_percent_height = get_text_dimensions(change_percent_str, change_font)
-    change_percent_x = width - change_percent_width - 15
-    change_percent_y = change_dollar_y + change_dollar_height + 2
+    change_percent_x = change_dollar_x - change_percent_width - 5  # Positioned to the left of dollar change with 5px gap
+    change_percent_y = change_dollar_y
     draw.text((change_percent_x, change_percent_y), change_percent_str, font=change_font, fill=change_color)
 
-    # Render dollar change and % change side by side
-    combined_change_str = f"${stock_data['dollar_change']:.2f} | {stock_data['percent_change']:.2f}%"
-    combined_change_width, combined_change_height = get_text_dimensions(combined_change_str, change_font)
-    
-    change_color = (0, 255, 0) if stock_data['dollar_change'] >= 0 else (255, 0, 0)
-    
-    combined_change_x = width - combined_change_width - 5  # Adjust the 5 as needed
-    combined_change_y = price_y + price_height + 2
-    draw.text((combined_change_x, combined_change_y), combined_change_str, font=change_font, fill=change_color)
-
     # Calculate start_y for the chart based on where the last text is drawn
-    total_text_height = combined_change_y + combined_change_height
-    margin = 2  # Define margin after the text
-    chart_start_y = total_text_height + margin    # Color base on stock movement
+    chart_start_y = change_dollar_y + change_dollar_height + 2
+
     if stock_data['dollar_change'] >= 0:
         polygon_color = (0, 255, 0) # green for stock go brrr
         line_color = (127, 255, 127) # follow line light green
