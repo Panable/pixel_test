@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+
 from getstocks import get_stock_data
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 
@@ -26,20 +26,7 @@ text_color_red = graphics.Color(255, 0, 0)
 ticker_x = 2
 ticker_y = 2
 
-def get_text_dimensions(text_string, font):
-    # Note: This function may no longer be needed as we are relying on hzeller's library for text rendering.
-    # It's kept for compatibility with other parts of your code.
-    text_string = str(text_string)
-    ascent, descent = font.getmetrics()
-    text_width = font.getmask(text_string).getbbox()[2]
-    text_height = font.getmask(text_string).getbbox()[3] + descent
-    return (text_width, text_height)
-
-
-
-
-
-def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
+def draw_chart_on_canvas(canvas, daily_close_prices, start_y, polygon_color, line_color):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
 
@@ -50,7 +37,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     padding = 0.10  # 10% padding
     padded_min_price = min_price - padding * (max_price - min_price)
     padded_max_price = max_price + padding * (max_price - min_price)
-    
+
     raw_scaled_prices = [
         chart_area_height - int(((price - padded_min_price) / (padded_max_price - padded_min_price)) * chart_area_height)
         for price in daily_close_prices
@@ -59,27 +46,12 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scaled_prices = [start_y + price for price in raw_scaled_prices]
     x_interval = chart_area_width / (len(scaled_prices) - 1)
 
-    polygon_points = [(0, chart_end_y)]
-    for i, price in enumerate(scaled_prices):
-        x_pos = i * x_interval
-        polygon_points.append((x_pos, price))
-    polygon_points.append((width-1, chart_end_y))
-
-    draw.polygon(polygon_points, fill=polygon_color)
-
     for i in range(1, len(scaled_prices)):
-        start_point = ((i-1) * x_interval, scaled_prices[i-1])
-        end_point = (i * x_interval, scaled_prices[i])
-        draw.line([start_point, end_point], fill=line_color, width=1)
-
-    print("First polygon point:", polygon_points[0])
-    print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
-    return draw
+        start_point = (int((i-1) * x_interval), int(scaled_prices[i-1]))
+        end_point = (int(i * x_interval), int(scaled_prices[i]))
+        graphics.DrawLine(canvas, start_point[0], start_point[1], end_point[0], end_point[1], line_color)
 
 def render_stock_on_matrix(ticker='AAPL'):
-    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
-    draw = ImageDraw.Draw(matrix_img)
-
     frame_canvas = matrix.CreateFrameCanvas()
     stock_data = get_stock_data(ticker)
 
@@ -107,17 +79,17 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     # Color settings based on price change
     if stock_data['dollar_change'] >= 0:
-        polygon_color = (0, 0, 255)  # blue for positive change
-        line_color = (127, 126, 255)  # lighter blue for the line
+        polygon_color = text_color_blue
+        line_color = graphics.Color(127, 126, 255)
     else:
-        polygon_color = (255, 0, 0)  # red for negative change
-        line_color = (255, 127, 127)  # lighter red for the line
+        polygon_color = text_color_red
+        line_color = graphics.Color(255, 127, 127)
 
-    # Draw the stock chart on the matrix image
-    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
+    # Draw the stock chart on the frame canvas
+    draw_chart_on_canvas(frame_canvas, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
 
-    frame_canvas.SetImage(matrix_img)
     matrix.SwapOnVSync(frame_canvas)
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL')
+
