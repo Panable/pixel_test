@@ -1,5 +1,5 @@
 import time
-from render_stocks import render_stock_on_matrix
+from render_stocks2 import render_stock_on_matrix
 
 if __name__ == "__main__":
     try:
