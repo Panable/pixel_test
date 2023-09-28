@@ -42,10 +42,8 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scale_factor = chart_area_height / padded_price_range
 
     # Adjust the starting point based on whether stock went up or down
-    if daily_close_prices[-1] >= daily_close_prices[0]:  # Stock went up
-        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
-    else:  # Stock went down
-        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
+    
+    adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
 
     scaled_prices = [
         adjusted_start_y + (price - min_price + padding * price_range) * scale_factor
