@@ -28,7 +28,7 @@ def clamp(value, min_value, max_value):
 
 
 
-def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
+def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y + 7, polygon_color, line_color):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
 
