@@ -28,7 +28,6 @@ def clamp(value, min_value, max_value):
 
 
 
-
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     start_y += 7
     width, height = matrix_img.size
@@ -58,12 +57,47 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
         end_point = (int(width - (i * x_interval)), scaled_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
 
-    # Explicitly set the last pixel
-    draw.point((width-1, scaled_prices[-1]), fill=line_color)
+    # This is so fucking hacky it makes me want to throw up out of anger.
+    draw.point((width-1, height-1), fill=polygon_color)
 
     print("First polygon point:", polygon_points[0])
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def render_stock_on_matrix(ticker='AAPL'):
     # Create a new PIL image to draw the chart.
