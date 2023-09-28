@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-API_KEY = "7b7e83b39ab1195a6886ec63891bb836"
+API_KEY = "8ff66016a4316135f02f72c9555e5449"
 BASE_URL = "http://api.marketstack.com/v1/eod"
 TICKER_SYMBOL = "AAPL"  # Default ticker symbol
 
