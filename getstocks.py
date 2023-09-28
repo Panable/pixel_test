@@ -1,7 +1,8 @@
+
 import requests
 import datetime
 
-API_KEY = "8ff66016a4316135f02f72c9555e5449"
+API_KEY = "7b7e83b39ab1195a6886ec63891bb836"
 BASE_URL = "http://api.marketstack.com/v1/eod"
 TICKER_SYMBOL = "AAPL"  # Default ticker symbol
 
@@ -9,6 +10,8 @@ def get_stock_data(symbol=TICKER_SYMBOL):
     # Get today's date and one month ago
     today = datetime.date.today()
     one_month_ago = today - datetime.timedelta(days=30)
+
+    print(f"Fetching data from {one_month_ago} to {today}")
 
     # Make the request
     params = {
@@ -25,6 +28,11 @@ def get_stock_data(symbol=TICKER_SYMBOL):
     if 'error' in data:
         raise Exception(data['error']['info'])
 
+    # Check if data returned is empty
+    if not data['data']:
+        print(f"No data found for the given range for {symbol}")
+        return {}
+
     # Extract the relevant data
     latest_data = data['data'][0]
     close_price = latest_data['close']
@@ -32,6 +40,8 @@ def get_stock_data(symbol=TICKER_SYMBOL):
     dollar_change = close_price - open_price
     percent_change = (dollar_change / open_price) * 100
     daily_close_prices = [entry['close'] for entry in data['data']]
+    
+    print(f"Latest data date: {latest_data['date']}")
 
     result = {
         "ticker": symbol,
