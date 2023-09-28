@@ -50,6 +50,10 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
         polygon_points.append((x_pos, price))
     polygon_points.append((0, start_y))
 
+    # Extend the last value horizontally to fill the remainder of the row
+    for i in range(int(width - len(scaled_prices) * x_interval), width):
+        draw.point((i, scaled_prices[-1]), fill=polygon_color)
+
     draw.polygon(polygon_points, fill=polygon_color)
 
     for i in range(1, len(scaled_prices)):
@@ -57,46 +61,9 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
         end_point = (int(width - (i * x_interval)), scaled_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
 
-    # This is so fucking hacky it makes me want to throw up out of anger.
-    draw.point((width-1, height-1), fill=polygon_color)
-
     print("First polygon point:", polygon_points[0])
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def render_stock_on_matrix(ticker='AAPL'):
