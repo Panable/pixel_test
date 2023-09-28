@@ -28,6 +28,7 @@ def clamp(value, min_value, max_value):
 
 
 
+
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
@@ -39,7 +40,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scale_factor = max_chart_height / (max_price - min_price)
 
     # Convert normalized prices to fit within the chart height
-    scaled_prices = [start_y - (price - min_price) * scale_factor for price in daily_close_prices]
+    scaled_prices = [start_y + (price - min_price) * scale_factor for price in daily_close_prices]  # Notice the '+' sign
     x_interval = chart_area_width / (len(scaled_prices) - 1)
 
     polygon_points = [(0, start_y)]
