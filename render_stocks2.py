@@ -38,38 +38,26 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     price_range = max_price - min_price
 
     if price_range == 0:
-        price_range = 1  # Prevents division by zero
+        price_range = 1  # Prevent division by zero
 
     scale_factor = (height - start_y) / price_range
     normalized_prices = [(price - min_price) * scale_factor for price in daily_close_prices]
 
-    # Invert the direction for the drawing, and add offset for placing it at the bottom
-    y_offset = start_y  # Increase/Decrease this value to adjust the position
+    # Adjust y-values for the drawing
+    y_offset = 7  # Adjust this to move chart vertically
     adjusted_prices = [height - (price + y_offset) for price in normalized_prices]
 
+    # Generate x-values based on the matrix width and the number of data points
+    x_values = [int((i/len(daily_close_prices)) * width) for i in range(len(daily_close_prices))]
+    
     # Create the polygon points
-    num_data_points = len(daily_close_prices)
-    columns_per_data_point = width / num_data_points
-
-    polygon_points = []
-    for i in range(num_data_points):
-        start_column = int(i * columns_per_data_point)
-        end_column = int((i + 1) * columns_per_data_point)
-        for x in range(start_column, end_column):
-            polygon_points.append((x, adjusted_prices[i]))
-    polygon_points = [(0, height)] + polygon_points + [(width-1, height)]  # Adding base points for the polygon
+    polygon_points = [(0, height)] + list(zip(x_values, adjusted_prices)) + [(width-1, height)]
 
     # Draw the polygon
     draw.polygon(polygon_points, fill=polygon_color)
 
     # Draw the line on top of the polygon
-    line_points = []
-    for i in range(num_data_points):
-        start_column = int(i * columns_per_data_point)
-        end_column = int((i + 1) * columns_per_data_point)
-        for x in range(start_column, end_column):
-            line_points.append((x, adjusted_prices[i]))
-    draw.line(line_points, fill=line_color)
+    draw.line(list(zip(x_values, adjusted_prices)), fill=line_color)
 
     return matrix_img
 
