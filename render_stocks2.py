@@ -27,44 +27,41 @@ def clamp(value, min_value, max_value):
 
 
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
+    # Debug Prints:
+    print("Daily close prices:", daily_close_prices)
+    
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
     price_range = max_price - min_price
+    
+    print("Max price:", max_price)
+    print("Min price:", min_price)
+    print("Price range:", price_range)
 
     chart_end_y = height - 1
-    chart_area_height = chart_end_y - start_y
     chart_area_width = width
 
-    # Calculate the required padding for your price range
-    padding = 0.10  # 10% padding
-    padded_price_range = price_range + 2 * padding * price_range
-
-    # Calculate the scale factor for the prices
-    scale_factor = chart_area_height / padded_price_range
-
-    # Adjust the starting point based on whether stock went up or down
-    if daily_close_prices[-1] >= daily_close_prices[0]:  # Stock went up
-        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
-    else:  # Stock went down
-        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
-
-    scaled_prices = [
-        clamp(adjusted_start_y + (price - min_price + padding * price_range) * scale_factor, start_y, chart_end_y)
+    # Normalizing the prices to fit in max_chart_height
+    normalized_prices = [
+        start_y + (price - min_price) / price_range * max_chart_height
         for price in daily_close_prices
     ]
 
-    x_interval = chart_area_width / (len(scaled_prices) - 1)
+    print("Normalized prices:", normalized_prices)
+    
+    x_interval = chart_area_width / (len(normalized_prices) - 1)
 
     polygon_points = [(0, chart_end_y)]
-    for i, price in enumerate(scaled_prices):
+    for i, price in enumerate(normalized_prices):
         x_pos = i * x_interval
         polygon_points.append((x_pos, price))
     polygon_points.append((width - 1, chart_end_y))
 
     draw.polygon(polygon_points, fill=polygon_color)
-    for i in range(1, len(scaled_prices)):
-        start_point = ((i-1) * x_interval, scaled_prices[i-1])
-        end_point = (i * x_interval, scaled_prices[i])
+
+    for i in range(1, len(normalized_prices)):
+        start_point = ((i-1) * x_interval, normalized_prices[i-1])
+        end_point = (i * x_interval, normalized_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
 
     print("First polygon point:", polygon_points[0])
