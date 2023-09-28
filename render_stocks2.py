@@ -22,7 +22,8 @@ color = graphics.Color(255, 255, 255)
 
 
 
-
+def clamp(value, min_value, max_value):
+    return max(min(value, max_value), min_value)
 
 
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
