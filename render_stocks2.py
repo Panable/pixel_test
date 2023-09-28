@@ -24,6 +24,7 @@ color = graphics.Color(255, 255, 255)
 
 
 
+
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
@@ -60,15 +61,6 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     polygon_points.append((width - 1, chart_end_y))
 
     draw.polygon(polygon_points, fill=polygon_color)
-
-    for i in range(1, len(scaled_prices)):
-        start_point = ((i-1) * x_interval, scaled_prices[i-1])
-        end_point = (i * x_interval, scaled_prices[i])
-        draw.line([start_point, end_point], fill=line_color, width=1)
-
-    print("First polygon point:", polygon_points[0])
-    print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
-    return draw(polygon_points, fill=polygon_color)
 
     for i in range(1, len(scaled_prices)):
         start_point = ((i-1) * x_interval, scaled_prices[i-1])
