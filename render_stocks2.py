@@ -28,7 +28,6 @@ def clamp(value, min_value, max_value):
 
 
 
-
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
@@ -40,17 +39,17 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scaled_prices = [start_y - (price - min_price) * scale_factor for price in daily_close_prices]
     x_interval = width / (len(scaled_prices) - 1)
 
-    polygon_points = [(0, start_y)]
+    polygon_points = [(width - 1, start_y)]
     for i, price in enumerate(scaled_prices):
-        x_pos = i * x_interval
+        x_pos = width - (i * x_interval)  # This line changes to reverse the x-coordinates
         polygon_points.append((x_pos, price))
-    polygon_points.append((width - 1, start_y))
+    polygon_points.append((0, start_y))
 
     draw.polygon(polygon_points, fill=polygon_color)
 
     for i in range(1, len(scaled_prices)):
-        start_point = ((i-1) * x_interval, scaled_prices[i-1])
-        end_point = (i * x_interval, scaled_prices[i])
+        start_point = (width - ((i-1) * x_interval), scaled_prices[i-1])
+        end_point = (width - (i * x_interval), scaled_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
 
     print("First polygon point:", polygon_points[0])
