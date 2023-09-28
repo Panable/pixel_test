@@ -29,37 +29,39 @@ def clamp(value, min_value, max_value):
 
 
 
+
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
+    start_y += 7
     width, height = matrix_img.size
 
-    # Normalize the prices
-    min_price = min(daily_close_prices)
     max_price = max(daily_close_prices)
-    price_range = max_price - min_price
+    min_price = min(daily_close_prices)
 
-    if price_range == 0:
-        price_range = 1  # Prevent division by zero
+    # Calculate the scale factor for the prices
+    scale_factor = max_chart_height / (max_price - min_price)
 
-    scale_factor = (height - start_y) / price_range
-    normalized_prices = [(price - min_price) * scale_factor for price in daily_close_prices]
+    # Convert normalized prices to fit within the chart height and flip the direction
+    scaled_prices = [start_y - (price - min_price) * scale_factor for price in daily_close_prices]
 
-    # Adjust y-values for the drawing
-    y_offset = 7  # Adjust this to move chart vertically
-    adjusted_prices = [height - (price + y_offset) for price in normalized_prices]
+    # Adjust x_interval to fit the width
+    x_interval = width / (len(scaled_prices) - 1)
 
-    # Generate x-values based on the matrix width and the number of data points
-    x_values = [int((i/len(daily_close_prices)) * width) for i in range(len(daily_close_prices))]
-    
-    # Create the polygon points
-    polygon_points = [(0, height)] + list(zip(x_values, adjusted_prices)) + [(width-1, height)]
+    polygon_points = [(width - 1, start_y)]
+    for i, price in enumerate(scaled_prices):
+        x_pos = int(width - (i * x_interval))  # This line changes to reverse the x-coordinates, and ensure it's an integer
+        polygon_points.append((x_pos, price))
+    polygon_points.append((0, start_y))
 
-    # Draw the polygon
     draw.polygon(polygon_points, fill=polygon_color)
 
-    # Draw the line on top of the polygon
-    draw.line(list(zip(x_values, adjusted_prices)), fill=line_color)
+    for i in range(1, len(scaled_prices)):
+        start_point = (int(width - ((i-1) * x_interval)), scaled_prices[i-1])
+        end_point = (int(width - (i * x_interval)), scaled_prices[i])
+        draw.line([start_point, end_point], fill=line_color, width=1)
 
-    return matrix_img
+    print("First polygon point:", polygon_points[0])
+    print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
+    return draw
 
 def render_stock_on_matrix(ticker='AAPL'):
     # Create a new PIL image to draw the chart.
