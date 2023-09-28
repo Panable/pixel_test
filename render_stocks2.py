@@ -26,42 +26,32 @@ def clamp(value, min_value, max_value):
     return max(min(value, max_value), min_value)
 
 
+
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
-    # Debug Prints:
-    print("Daily close prices:", daily_close_prices)
-    
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
-    price_range = max_price - min_price
-    
-    print("Max price:", max_price)
-    print("Min price:", min_price)
-    print("Price range:", price_range)
 
-    chart_end_y = height - 1
+    chart_end_y = start_y + max_chart_height
     chart_area_width = width
 
-    # Normalizing the prices to fit in max_chart_height
-    normalized_prices = [
-        start_y + (price - min_price) / price_range * max_chart_height
-        for price in daily_close_prices
-    ]
+    # Calculate the scale factor for the prices
+    scale_factor = max_chart_height / (max_price - min_price)
 
-    print("Normalized prices:", normalized_prices)
-    
-    x_interval = chart_area_width / (len(normalized_prices) - 1)
+    # Convert normalized prices to fit within the chart height
+    scaled_prices = [start_y + (price - min_price) * scale_factor for price in daily_close_prices]
+    x_interval = chart_area_width / (len(scaled_prices) - 1)
 
     polygon_points = [(0, chart_end_y)]
-    for i, price in enumerate(normalized_prices):
+    for i, price in enumerate(scaled_prices):
         x_pos = i * x_interval
         polygon_points.append((x_pos, price))
     polygon_points.append((width - 1, chart_end_y))
 
     draw.polygon(polygon_points, fill=polygon_color)
 
-    for i in range(1, len(normalized_prices)):
-        start_point = ((i-1) * x_interval, normalized_prices[i-1])
-        end_point = (i * x_interval, normalized_prices[i])
+    for i in range(1, len(scaled_prices)):
+        start_point = ((i-1) * x_interval, scaled_prices[i-1])
+        end_point = (i * x_interval, scaled_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
 
     print("First polygon point:", polygon_points[0])
