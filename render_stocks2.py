@@ -62,6 +62,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     return draw
 
 
+
 def render_stock_on_matrix(ticker='AAPL'):
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
@@ -107,3 +108,4 @@ def render_stock_on_matrix(ticker='AAPL'):
 
 if __name__ == "__main__":
     render_stock_on_matrix('AAPL')
+

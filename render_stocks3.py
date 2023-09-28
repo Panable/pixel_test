@@ -17,7 +17,7 @@ chart_start_y = height - max_chart_height
 
 
 font = graphics.Font()
-font.LoadFont("/usr/local/share/7x13.bdf")
+font.LoadFont("/usr/local/share/fonts/7x13.bdf")
 color = graphics.Color(255, 255, 255)
 
 
@@ -61,30 +61,31 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
 
+
 def render_stock_on_matrix(ticker='AAPL'):
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
-
     stock_data = get_stock_data(ticker)
-
+    
     # Using hzeller's library to render text
     offscreen_canvas = matrix.CreateFrameCanvas()
+    offscreen_canvas.Clear()  # Clear any previous content
 
-    # Render stock ticker
+    # Render stock ticker at the top left of the matrix
     ticker_str = stock_data['ticker']
-    graphics.DrawText(offscreen_canvas, font, 2, 8, color, ticker_str)
+    graphics.DrawText(offscreen_canvas, font, 2, font.height, color, ticker_str)
 
     # Render % change right next to the ticker name
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
-    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_percent_str) - 2, 8, color, change_percent_str)
+    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_percent_str) - 2, font.height, color, change_percent_str)
 
     # Render current price below the ticker name
     price_str = f"${stock_data['current_price']:.2f}"
-    graphics.DrawText(offscreen_canvas, font, 2, 17, color, price_str)
+    graphics.DrawText(offscreen_canvas, font, 2, 2 * font.height, color, price_str)
 
     # Render dollar change right next to the current price
     change_dollar_str = f"${stock_data['dollar_change']:.2f}"
-    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_dollar_str) - 2, 17, color, change_dollar_str)
+    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_dollar_str) - 2, 2 * font.height, color, change_dollar_str)
 
     # Draw the stock chart on the matrix image
     if stock_data['dollar_change'] >= 0:
