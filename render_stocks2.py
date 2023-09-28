@@ -73,6 +73,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
 
 def render_stock_on_matrix(ticker='AAPL'):
     # Create a new PIL image to draw the chart.
+    local_chart_start_y = chart_start_y
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
 
@@ -98,7 +99,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     padding = 0.10
     padded_price_range = price_range + 2 * padding * price_range
     chart_end_y = height - 1
-    chart_area_height = chart_end_y - chart_start_y
+    chart_area_height = chart_end_y - local_chart_start_y
     scale_factor = chart_area_height / padded_price_range
 
     if daily_close_prices[-1] >= daily_close_prices[0]:  # Stock went up
@@ -114,9 +115,9 @@ def render_stock_on_matrix(ticker='AAPL'):
     # Adjust chart start based on scaled_prices
     first_last_diff = scaled_prices[-1] - scaled_prices[0]
     if stock_data['dollar_change'] < 0 and first_last_diff > 0:
-        chart_start_y += first_last_diff
+        local_chart_start_y += first_last_diff
 
-    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, chart_start_y, polygon_color, line_color)    # Transfer the PIL image to the offscreen_canvas.
+    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, local_chart_start_y, polygon_color, line_color)    # Transfer the PIL image to the offscreen_canvas.
     offscreen_canvas = matrix.CreateFrameCanvas()
     matrix_img = matrix_img.convert('RGB')
     for y in range(height):
