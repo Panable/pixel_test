@@ -28,17 +28,24 @@ def clamp(value, min_value, max_value):
 
 
 
+
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     width, height = matrix_img.size
-    
+
     # Normalize the prices
     min_price = min(daily_close_prices)
     max_price = max(daily_close_prices)
     price_range = max_price - min_price
 
+    if price_range == 0:
+        price_range = 1  # Prevents division by zero
+
     scale_factor = (height - start_y) / price_range
     normalized_prices = [(price - min_price) * scale_factor for price in daily_close_prices]
-    adjusted_prices = [height - (price + start_y) for price in normalized_prices]
+
+    # Invert the direction for the drawing, and add offset for placing it at the bottom
+    y_offset = start_y  # Increase/Decrease this value to adjust the position
+    adjusted_prices = [height - (price + y_offset) for price in normalized_prices]
 
     # Create the polygon points
     num_data_points = len(daily_close_prices)
