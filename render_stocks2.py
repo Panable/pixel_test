@@ -65,42 +65,41 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
 
 
 def render_stock_on_matrix(ticker='AAPL'):
+    # Create a new PIL image to draw the chart.
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
+
     stock_data = get_stock_data(ticker)
     
-    # Using hzeller's library to render text
+    # Draw the stock chart on the PIL image.
+    if stock_data['dollar_change'] >= 0:
+        polygon_color = (0, 0, 255)
+        line_color = (127, 126, 255)
+    else:
+        polygon_color = (255, 0, 0)
+        line_color = (255, 127, 127)
+    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
+
+    # Transfer the PIL image to the offscreen_canvas.
     offscreen_canvas = matrix.CreateFrameCanvas()
-    offscreen_canvas.Clear()  # Clear any previous content
+    matrix_img = matrix_img.convert('RGB')
+    for y in range(height):
+        for x in range(width):
+            pixel = matrix_img.getpixel((x, y))
+            offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
 
-    # Render stock ticker at the top left of the matrix
+    # Render text on top of the chart directly on the offscreen_canvas.
     ticker_str = stock_data['ticker']
-    graphics.DrawText(offscreen_canvas, font, 2, font.height, color, ticker_str)
-
-    # Render % change right next to the ticker name
+    graphics.DrawText(offscreen_canvas, font, 2, 7, color, ticker_str)
+    
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
-    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_percent_str) - 2, font.height, color, change_percent_str)
-
-    # Render current price below the ticker name
+    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_percent_str) - 2, 7, color, change_percent_str)
+    
     price_str = f"${stock_data['current_price']:.2f}"
-    graphics.DrawText(offscreen_canvas, font, 2, 2 * font.height, color, price_str)
-
-    # Render dollar change right next to the current price
+    graphics.DrawText(offscreen_canvas, font, 2, 14, color, price_str)
+    
     change_dollar_str = f"${stock_data['dollar_change']:.2f}"
-    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_dollar_str) - 2, 2 * font.height, color, change_dollar_str)
+    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_dollar_str) - 2, 14, color, change_dollar_str)
 
-    # Comment out the code that draws the chart for debugging
-    # if stock_data['dollar_change'] >= 0:
-    #     polygon_color = (0, 0, 255)
-    #     line_color = (127, 126, 255)
-    # else:
-    #     polygon_color = (255, 0, 0)
-    #     line_color = (255, 127, 127)
-    # draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
-
-    # Combine the text rendered with hzeller's library
     matrix.SwapOnVSync(offscreen_canvas)
-
-if __name__ == "__main__":
-    render_stock_on_matrix('AAPL')
 
