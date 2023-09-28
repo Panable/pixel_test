@@ -17,7 +17,7 @@ chart_start_y = height - max_chart_height
 
 
 font = graphics.Font()
-font.LoadFont("/usr/local/share/fonts/5x8.bdf")
+font.LoadFont("/usr/local/share/fonts/4x6.bdf")
 color = graphics.Color(255, 255, 255)
 
 
