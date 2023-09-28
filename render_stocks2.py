@@ -102,21 +102,25 @@ def render_stock_on_matrix(ticker='AAPL'):
             pixel = matrix_img.getpixel((x, y))
             offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
 
+    # Render text on top of the chart directly on the offscreen_canvas.
+    ticker_str = stock_data['ticker']
+    change_percent_str = f"{stock_data['percent_change']:.2f}%"
+    price_str = f"${stock_data['current_price']:.2f}"
+    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
+
     # Define positioning for each text element:
     ticker_x = 2
     ticker_y = 7
-    change_percent_x = width - 8 * len(stock_data['percent_change']) - 2
+    change_percent_x = width - 8 * len(change_percent_str) - 2
     change_percent_y = 7
     price_x = 2
     price_y = 14
-    change_dollar_x = width - 8 * len(stock_data['dollar_change']) - 2
+    change_dollar_x = width - 8 * len(change_dollar_str) - 2
     change_dollar_y = 14
 
-    # Render text on top of the chart directly on the offscreen_canvas.
-    graphics.DrawText(offscreen_canvas, font, ticker_x, ticker_y, color, stock_data['ticker'])
-    graphics.DrawText(offscreen_canvas, font, change_percent_x, change_percent_y, color, f"{stock_data['percent_change']:.2f}%")
-    graphics.DrawText(offscreen_canvas, font, price_x, price_y, color, f"${stock_data['current_price']:.2f}")
-    graphics.DrawText(offscreen_canvas, font, change_dollar_x, change_dollar_y, color, f"${stock_data['dollar_change']:.2f}")
+    graphics.DrawText(offscreen_canvas, font, ticker_x, ticker_y, color, ticker_str)
+    graphics.DrawText(offscreen_canvas, font, change_percent_x, change_percent_y, color, change_percent_str)
+    graphics.DrawText(offscreen_canvas, font, price_x, price_y, color, price_str)
+    graphics.DrawText(offscreen_canvas, font, change_dollar_x, change_dollar_y, color, change_dollar_str)
 
     matrix.SwapOnVSync(offscreen_canvas)
-
