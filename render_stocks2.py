@@ -12,7 +12,7 @@ options.hardware_mapping = 'adafruit-hat'
 matrix = RGBMatrix(options=options)
 
 width, height = 64, 32
-max_chart_height = 20
+max_chart_height = 15
 chart_start_y = height - max_chart_height
 
 
@@ -120,7 +120,7 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     
     if stock_data['dollar_change'] >= 0:
-        change_color = graphics.Color(0, 255, 0)  # Green for price up
+        change_color = graphics.Color(0, 0, 255)  # Green for price up
     else:
         change_color = graphics.Color(255, 0, 0)  # Red for price down
     
