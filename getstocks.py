@@ -20,6 +20,7 @@ def get_stock_data(symbol=TICKER_SYMBOL):
     
     response = requests.get(BASE_URL, params=params)
     data = response.json()
+    print("API Response:", data)
     
     if 'error' in data:
         raise Exception(data['error']['info'])
