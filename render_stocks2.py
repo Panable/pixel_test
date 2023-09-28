@@ -29,7 +29,6 @@ def clamp(value, min_value, max_value):
 
 
 
-
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     start_y += 7
     width, height = matrix_img.size
@@ -50,6 +49,7 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     for i, price in enumerate(scaled_prices):
         x_pos = int(width - (i * x_interval))  # This line changes to reverse the x-coordinates, and ensure it's an integer
         polygon_points.append((x_pos, price))
+    polygon_points[-1] = (width - 1, scaled_prices[-1])  # Ensure the last point is rightmost
     polygon_points.append((0, start_y))
 
     draw.polygon(polygon_points, fill=polygon_color)
