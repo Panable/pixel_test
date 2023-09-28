@@ -47,8 +47,9 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     else:  # Stock went down
         adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
 
+    
     scaled_prices = [
-        adjusted_start_y + (price - min_price + padding * price_range) * scale_factor
+        clamp(adjusted_start_y + (price - min_price + padding * price_range) * scale_factor, 0, height-1)
         for price in daily_close_prices
     ]
 
