@@ -42,8 +42,10 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scale_factor = chart_area_height / padded_price_range
 
     # Adjust the starting point based on whether stock went up or down
-    
-    adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
+    if daily_close_prices[-1] >= daily_close_prices[0]:  # Stock went up
+        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
+    else:  # Stock went down
+        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
 
     scaled_prices = [
         adjusted_start_y + (price - min_price + padding * price_range) * scale_factor
@@ -100,10 +102,8 @@ def render_stock_on_matrix(ticker='AAPL'):
     chart_area_height = chart_end_y - local_chart_start_y
     scale_factor = chart_area_height / padded_price_range
 
-    if daily_close_prices[-1] >= daily_close_prices[0]:  # Stock went up
-        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
-    else:  # Stock went down
-        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
+    # Adjusting the starting point using a uniform computation
+    adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
 
     scaled_prices = [
         adjusted_start_y + (price - min_price + padding * price_range) * scale_factor
@@ -115,15 +115,15 @@ def render_stock_on_matrix(ticker='AAPL'):
     if stock_data['dollar_change'] < 0 and first_last_diff > 0:
         local_chart_start_y += first_last_diff
 
-    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, local_chart_start_y, polygon_color, line_color)    # Transfer the PIL image to the offscreen_canvas.
+    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, local_chart_start_y, polygon_color, line_color)
+    
+    # Transfer the PIL image to the offscreen_canvas.
     offscreen_canvas = matrix.CreateFrameCanvas()
     matrix_img = matrix_img.convert('RGB')
     for y in range(height):
         for x in range(width):
             pixel = matrix_img.getpixel((x, y))
-            offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
-
-    # Render text on top of the chart directly on the offscreen_canvas.
+            offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])    # Render text on top of the chart directly on the offscreen_canvas.
     ticker_str = stock_data['ticker']
     change_percent_str = f"{stock_data['percent_change']:.2f}%"
     price_str = f"${stock_data['current_price']:.2f}"
