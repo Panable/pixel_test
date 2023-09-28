@@ -71,9 +71,6 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
     return draw
 
-
-
-
 def render_stock_on_matrix(ticker='AAPL'):
     # Create a new PIL image to draw the chart.
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
@@ -81,30 +78,45 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     stock_data = get_stock_data(ticker)
     
-    # Draw the stock chart on the PIL image.
-    if stock_data['dollar_change'] >= 0:
-        polygon_color = (0, 0, 255)
-        line_color = (127, 126, 255)
-    else:
-        polygon_color = (255, 0, 0)
-
-def render_stock_on_matrix(ticker='AAPL'):
-    # Create a new PIL image to draw the chart.
-    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
-    draw = ImageDraw.Draw(matrix_img)
-
-    stock_data = get_stock_data(ticker)
+    # Set default colors (optional)
+    polygon_color = (255, 255, 255)  # Default to white
+    line_color = (127, 127, 127)     # Default to grey
     
-    # Draw the stock chart on the PIL image.
+    # Determine colors based on stock price change
     if stock_data['dollar_change'] >= 0:
         polygon_color = (0, 0, 255)
         line_color = (127, 126, 255)
     else:
         polygon_color = (255, 0, 0)
         line_color = (255, 127, 127)
-    draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
 
-    # Transfer the PIL image to the offscreen_canvas.
+    # Calculate scaled_prices for adjustment
+    daily_close_prices = stock_data['daily_close_prices']
+    max_price = max(daily_close_prices)
+    min_price = min(daily_close_prices)
+    price_range = max_price - min_price
+    padding = 0.10
+    padded_price_range = price_range + 2 * padding * price_range
+    chart_end_y = height - 1
+    chart_area_height = chart_end_y - chart_start_y
+    scale_factor = chart_area_height / padded_price_range
+
+    if daily_close_prices[-1] >= daily_close_prices[0]:  # Stock went up
+        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
+    else:  # Stock went down
+        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
+
+    scaled_prices = [
+        adjusted_start_y + (price - min_price + padding * price_range) * scale_factor
+        for price in daily_close_prices
+    ]
+    
+    # Adjust chart start based on scaled_prices
+    first_last_diff = scaled_prices[-1] - scaled_prices[0]
+    if stock_data['dollar_change'] < 0 and first_last_diff > 0:
+        chart_start_y += first_last_diff
+
+    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, chart_start_y, polygon_color, line_color)    # Transfer the PIL image to the offscreen_canvas.
     offscreen_canvas = matrix.CreateFrameCanvas()
     matrix_img = matrix_img.convert('RGB')
     for y in range(height):
