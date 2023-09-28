@@ -17,7 +17,7 @@ chart_start_y = height - max_chart_height
 
 
 font = graphics.Font()
-font.LoadFont("/usr/local/share/fonts/7x13.bdf")
+font.LoadFont("/usr/local/share/fonts/5x8.bdf")
 color = graphics.Color(255, 255, 255)
 
 
@@ -77,6 +77,20 @@ def render_stock_on_matrix(ticker='AAPL'):
         line_color = (127, 126, 255)
     else:
         polygon_color = (255, 0, 0)
+
+def render_stock_on_matrix(ticker='AAPL'):
+    # Create a new PIL image to draw the chart.
+    matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
+    draw = ImageDraw.Draw(matrix_img)
+
+    stock_data = get_stock_data(ticker)
+    
+    # Draw the stock chart on the PIL image.
+    if stock_data['dollar_change'] >= 0:
+        polygon_color = (0, 0, 255)
+        line_color = (127, 126, 255)
+    else:
+        polygon_color = (255, 0, 0)
         line_color = (255, 127, 127)
     draw_chart_on_matrix(matrix_img, draw, stock_data['daily_close_prices'], chart_start_y, polygon_color, line_color)
 
@@ -88,18 +102,21 @@ def render_stock_on_matrix(ticker='AAPL'):
             pixel = matrix_img.getpixel((x, y))
             offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
 
+    # Define positioning for each text element:
+    ticker_x = 2
+    ticker_y = 7
+    change_percent_x = width - 8 * len(stock_data['percent_change']) - 2
+    change_percent_y = 7
+    price_x = 2
+    price_y = 14
+    change_dollar_x = width - 8 * len(stock_data['dollar_change']) - 2
+    change_dollar_y = 14
+
     # Render text on top of the chart directly on the offscreen_canvas.
-    ticker_str = stock_data['ticker']
-    graphics.DrawText(offscreen_canvas, font, 2, 7, color, ticker_str)
-    
-    change_percent_str = f"{stock_data['percent_change']:.2f}%"
-    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_percent_str) - 2, 7, color, change_percent_str)
-    
-    price_str = f"${stock_data['current_price']:.2f}"
-    graphics.DrawText(offscreen_canvas, font, 2, 14, color, price_str)
-    
-    change_dollar_str = f"${stock_data['dollar_change']:.2f}"
-    graphics.DrawText(offscreen_canvas, font, width - 8 * len(change_dollar_str) - 2, 14, color, change_dollar_str)
+    graphics.DrawText(offscreen_canvas, font, ticker_x, ticker_y, color, stock_data['ticker'])
+    graphics.DrawText(offscreen_canvas, font, change_percent_x, change_percent_y, color, f"{stock_data['percent_change']:.2f}%")
+    graphics.DrawText(offscreen_canvas, font, price_x, price_y, color, f"${stock_data['current_price']:.2f}")
+    graphics.DrawText(offscreen_canvas, font, change_dollar_x, change_dollar_y, color, f"${stock_data['dollar_change']:.2f}")
 
     matrix.SwapOnVSync(offscreen_canvas)
 
