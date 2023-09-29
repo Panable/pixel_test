@@ -40,13 +40,12 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scaled_prices = [start_y - (price - min_price) * scale_factor for price in daily_close_prices]
     x_interval = width / (len(scaled_prices) - 1)
 
-    # Start with the bottom-right-most point
     polygon_points = [(width - 1, start_y)]
     for i, price in enumerate(scaled_prices):
-        x_pos = width - (i * x_interval)
+        x_pos = width - (i * x_interval)  # This line changes to reverse the x-coordinates
         polygon_points.append((x_pos, price))
-    # End with the bottom-left-most point
     polygon_points.append((0, start_y))
+
     draw.polygon(polygon_points, fill=polygon_color)
 
     for i in range(1, len(scaled_prices)):
