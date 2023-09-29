@@ -41,11 +41,15 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     x_interval = width / (len(scaled_prices) - 1)
 
     polygon_points = [(width - 1, start_y)]
-    for i, price in enumerate(scaled_prices):
-        x_pos = width - (i * x_interval)  # This line changes to reverse the x-coordinates
-        polygon_points.append((x_pos, price))
-    polygon_points.append((0, start_y))
 
+    for i, price in enumerate(scaled_prices):
+        if i == 0:
+            x_pos = width - 1
+        elif i == len(scaled_prices) - 1:
+            x_pos = 0
+        else:
+            x_pos = width - (i * x_interval)
+    polygon_points.append((x_pos, price))
     draw.polygon(polygon_points, fill=polygon_color)
 
     for i in range(1, len(scaled_prices)):
