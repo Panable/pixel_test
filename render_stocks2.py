@@ -18,54 +18,52 @@ chart_start_y = height - max_chart_height
 font = graphics.Font()
 font.LoadFont("/usr/local/share/fonts/5x8.bdf")
 color = graphics.Color(255, 255, 255)
-
+def linear_map(value, from_min, from_max, to_min, to_max):
+    # Map the input value from [from_min, from_max] to [to_min, to_max]
+    return (value - from_min) * (to_max - to_min) / (from_max - from_min) + to_min
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
-    start_y += 14
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
-    price_range = max_price - min_price
-
-    if price_range == 0:
-        price_range = 0.01  # Setting a small default value
-
-    # Check if the price range is too narrow
-    if price_range < 0.1 * max_price:
-        price_range = 0.1 * max_price  # This will give the chart a minimum height.
-
-    scale_factor = max_chart_height / price_range
+    
+    # Map the prices directly to the matrix using linear_map
+    # Adjusting the range to occupy half the matrix's height
+    scaled_prices = [linear_map(price, min_price, max_price, height - 1, height // 2 + 3) for price in daily_close_prices]
 
     # Resample the data points to fit into the matrix width
     data_points_per_column = len(daily_close_prices) // width
-    resampled_prices = [daily_close_prices[i] for i in range(0, len(daily_close_prices), data_points_per_column)]
-    
-    scaled_prices = [start_y - (price - min_price) * scale_factor for price in resampled_prices]
-    x_interval = width / (len(scaled_prices) - 1)
+    resampled_prices = [scaled_prices[i] for i in range(0, len(scaled_prices), data_points_per_column)]
+    x_interval = width / (len(resampled_prices) - 1)
 
-    polygon_points = [(0, start_y)]
-    for i, price in enumerate(scaled_prices):
-        x_pos = i * x_interval
-        polygon_points.append((x_pos, price))
-    polygon_points.append((width - 1, start_y))
+    # Draw the chart and fill the area underneath
+    for i in range(1, len(resampled_prices)):
+        x1 = (i - 1) * x_interval
+        x2 = i * x_interval
+        y1, y2 = resampled_prices[i - 1], resampled_prices[i]
 
-    draw.polygon(polygon_points, fill=polygon_color)
-    for i in range(1, len(scaled_prices)):
-        start_point = ((i-1) * x_interval, scaled_prices[i-1])
-        end_point = (i * x_interval, scaled_prices[i])
-        draw.line([start_point, end_point], fill=line_color, width=1)
+        # Fill the area underneath
+        draw.polygon([(x1, y1), (x2, y2), (x2, height - 1), (x1, height - 1)], fill=polygon_color)
+
+        # Draw the line
+        draw.line([(x1, y1), (x2, y2)], fill=line_color, width=1)
 
     print("Resampled Prices:", resampled_prices[:10])
     return draw
+
 
 def render_stock_on_matrix(ticker='AAPL'):
     local_chart_start_y = chart_start_y
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
 
-    stock_data = get_stock_data(ticker)
-    
+    stock_data = get_stock_data('AMD')
+
+
+    # Print out the stock data
+    print("Raw Stock Data:", stock_data)
+
     polygon_color = (255, 255, 255)
     line_color = (127, 127, 127)
-    
+
     if stock_data['dollar_change'] >= 0:
         polygon_color = (0, 0, 255)
         line_color = (127, 126, 255)
@@ -77,6 +75,12 @@ def render_stock_on_matrix(ticker='AAPL'):
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
     price_range = max_price - min_price
+
+    # Print out some calculations
+    print("Price Range:", price_range)
+    print("Max Price:", max_price)
+    print("Min Price:", min_price)
+
     padding = 0.10
     padded_price_range = price_range + 2 * padding * price_range
 
@@ -85,18 +89,25 @@ def render_stock_on_matrix(ticker='AAPL'):
 
     chart_end_y = height - 1
     chart_area_height = chart_end_y - local_chart_start_y
-    scale_factor = chart_area_height / padded_price_range
+    adjusted_scale_factor = max_chart_height / price_range
+
+    print("Scale Factor:", adjusted_scale_factor)
 
     if daily_close_prices[-1] >= daily_close_prices[0]:
-        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * scale_factor
+        adjusted_start_y = chart_end_y - (max_price + padding * price_range) * adjusted_scale_factor
     else:
-        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * scale_factor
+        adjusted_start_y = chart_end_y - (min_price - padding * price_range) * adjusted_scale_factor
 
+    mid_point = (chart_start_y + chart_end_y) / 2
+    adjusted_start_y = mid_point - (max_price - min_price) * adjusted_scale_factor / 2
     scaled_prices = [
-        adjusted_start_y + (price - min_price + padding * price_range) * scale_factor
+            adjusted_start_y + (price - min_price + padding * price_range) * adjusted_scale_factor
         for price in daily_close_prices
     ]
-    
+
+    print("Adjusted Start Y:", adjusted_start_y)
+    print("Scaled Prices (First 10):", scaled_prices[:10])
+
     first_last_diff = scaled_prices[-1] - scaled_prices[0]
     if stock_data['dollar_change'] < 0 and first_last_diff > 0:
         local_chart_start_y += first_last_diff
@@ -128,7 +139,7 @@ def render_stock_on_matrix(ticker='AAPL'):
         change_color = graphics.Color(0, 0, 255)
     else:
         change_color = graphics.Color(255, 0, 0)
-    
+
     graphics.DrawText(offscreen_canvas, font, ticker_x, ticker_y, color, ticker_str)
     graphics.DrawText(offscreen_canvas, font, change_percent_x, change_percent_y, change_color, change_percent_str)
     graphics.DrawText(offscreen_canvas, font, price_x, price_y, color, price_str)
