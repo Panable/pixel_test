@@ -20,21 +20,25 @@ font = graphics.Font()
 font.LoadFont("/usr/local/share/fonts/5x8.bdf")
 color = graphics.Color(255, 255, 255)
 
-
-
-
-
-
 def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_color, line_color):
     start_y += 14
     max_price = max(daily_close_prices)
     min_price = min(daily_close_prices)
+    price_range = max_price - min_price
+
+    # Check if the price range is too narrow
+    if price_range < 0.1 * max_price:
+        price_range = 0.1 * max_price  # This will give the chart a minimum height.
 
     # Calculate the scale factor for the prices
-    scale_factor = max_chart_height / (max_price - min_price)
+    scale_factor = max_chart_height / price_range
 
+    # Resample the data points to fit into the matrix width
+    data_points_per_column = len(daily_close_prices) // width
+    resampled_prices = [daily_close_prices[i] for i in range(0, len(daily_close_prices), data_points_per_column)]
+    
     # Convert normalized prices to fit within the chart height and flip the direction
-    scaled_prices = [start_y - (price - min_price) * scale_factor for price in daily_close_prices]
+    scaled_prices = [start_y - (price - min_price) * scale_factor for price in resampled_prices]
     x_interval = width / (len(scaled_prices) - 1)
 
     polygon_points = [(0, start_y)]
@@ -43,16 +47,21 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
         polygon_points.append((x_pos, price))
     polygon_points.append((width - 1, start_y))
 
+    # Draw the filled polygon first
     draw.polygon(polygon_points, fill=polygon_color)
 
+    # Then draw the line on top of the polygon
     for i in range(1, len(scaled_prices)):
         start_point = ((i-1) * x_interval, scaled_prices[i-1])
         end_point = (i * x_interval, scaled_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
 
-    print("First polygon point:", polygon_points[0])
-    print("Some polygon y-values:", [p[1] for p in polygon_points[:5]])
+    # Print some of the resampled prices for verification
+    print("Resampled Prices:", resampled_prices[:10])
+
     return draw
+
+
 def render_stock_on_matrix(ticker='AAPL'):
     # Create a new PIL image to draw the chart.
     local_chart_start_y = chart_start_y
@@ -80,6 +89,10 @@ def render_stock_on_matrix(ticker='AAPL'):
     price_range = max_price - min_price
     padding = 0.10
     padded_price_range = price_range + 2 * padding * price_range
+
+    if padded_price_range == 0:
+        padded_price_range = 1
+
     chart_end_y = height - 1
     chart_area_height = chart_end_y - local_chart_start_y
     scale_factor = chart_area_height / padded_price_range
