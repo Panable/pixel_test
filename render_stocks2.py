@@ -1,4 +1,4 @@
-
+from getstocks import get_stock_data
 from PIL import Image, ImageDraw, ImageFont
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 
