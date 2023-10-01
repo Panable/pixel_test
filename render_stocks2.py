@@ -43,8 +43,8 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     return draw
 
 
-def render_stock_on_matrix(ticker='AAPL'):
-    local_chart_start_y = chart_start_y
+
+def render_stock_on_matrix_basic(ticker='AAPL'):
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
     stock_data = get_stock_data(ticker)
@@ -58,22 +58,8 @@ def render_stock_on_matrix(ticker='AAPL'):
         line_color = (255, 127, 127)
 
     daily_close_prices = stock_data['daily_close_prices']
-    price_diff = daily_close_prices[-1] - daily_close_prices[0]
-    adjustment_factor = 5
-    local_chart_start_y -= int(adjustment_factor * price_diff / max(daily_close_prices))
-    local_chart_start_y = clamp(local_chart_start_y, 0, height - max_chart_height)
-
-    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, local_chart_start_y, polygon_color, line_color)
-
-    # Check if any part of the chart goes out of bounds and adjust accordingly
-    min_y_val = min([pixel[1] for pixel in matrix_img.getdata()])
-    max_y_val = max([pixel[1] for pixel in matrix_img.getdata()])
-    if min_y_val < chart_start_y:
-        y_shift = chart_start_y - min_y_val
-        matrix_img = matrix_img.transform(matrix_img.size, Image.AFFINE, (1, 0, 0, 0, 1, y_shift))
-    if max_y_val > (chart_start_y + max_chart_height):
-        y_shift = (chart_start_y + max_chart_height) - max_y_val
-        matrix_img = matrix_img.transform(matrix_img.size, Image.AFFINE, (1, 0, 0, 0, 1, y_shift))
+    
+    draw_chart_on_matrix(matrix_img, draw, daily_close_prices, chart_start_y, polygon_color, line_color)
     
     offscreen_canvas = matrix.CreateFrameCanvas()
     matrix_img = matrix_img.convert('RGB')
