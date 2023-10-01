@@ -29,20 +29,11 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     scaled_prices = [height - (price - min_price) * scale_factor for price in daily_close_prices]
     x_interval = width / (len(scaled_prices) - 1)
 
-    polygon_points = [(width - 1, height)]
-    for i, price in enumerate(scaled_prices):
-        x_pos = width - (i * x_interval)
-        polygon_points.append((x_pos, price))
-    polygon_points.append((0, height))
-
-    draw.polygon(polygon_points, fill=polygon_color)
     for i in range(1, len(scaled_prices)):
         start_point = (width - ((i-1) * x_interval), scaled_prices[i-1])
         end_point = (width - (i * x_interval), scaled_prices[i])
         draw.line([start_point, end_point], fill=line_color, width=1)
     return draw
-
-
 
 def render_stock_on_matrix(ticker='AAPL'):
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
@@ -78,4 +69,3 @@ def render_stock_on_matrix(ticker='AAPL'):
     graphics.DrawText(offscreen_canvas, font, width - 5 * len(change_dollar_str), 17, color, change_dollar_str)
 
     matrix.SwapOnVSync(offscreen_canvas)
-
