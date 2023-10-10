@@ -9,6 +9,7 @@ options.cols = 64
 options.chain_length = 1
 options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'
+options.gpio_slowdown = 4 
 matrix = RGBMatrix(options=options)
 
 width, height = 64, 32
@@ -50,12 +51,12 @@ def draw_chart_on_matrix(matrix_img, draw, daily_close_prices, start_y, polygon_
     return draw
 
 
-def render_stock_on_matrix(ticker='AAPL'):
+def render_stock_on_matrix(ticker='NVDA'):
     local_chart_start_y = chart_start_y
     matrix_img = Image.new('RGB', (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(matrix_img)
 
-    stock_data = get_stock_data('AMD')
+    stock_data = get_stock_data('NVDA')
 
 
     # Print out the stock data
@@ -65,8 +66,8 @@ def render_stock_on_matrix(ticker='AAPL'):
     line_color = (127, 127, 127)
 
     if stock_data['dollar_change'] >= 0:
-        polygon_color = (0, 0, 255)
-        line_color = (127, 126, 255)
+        polygon_color = (0, 255, 0)
+        line_color = (127, 255, 126)
     else:
         polygon_color = (255, 0, 0)
         line_color = (255, 127, 127)
@@ -136,7 +137,7 @@ def render_stock_on_matrix(ticker='AAPL'):
     change_dollar_y = 17
 
     if stock_data['dollar_change'] >= 0:
-        change_color = graphics.Color(0, 0, 255)
+        change_color = graphics.Color(0, 255, 0)
     else:
         change_color = graphics.Color(255, 0, 0)
 
