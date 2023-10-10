@@ -51,11 +51,12 @@ def draw_or_scroll_text_step(canvas, font, start_x, y, max_width, text, color, s
         return start_x
 
     new_pos = scroll_pos + shift
-    if new_pos <= start_x + max_width - text_width:
-        new_pos = start_x
+    
+    if new_pos <= start_x - text_width:
+        new_pos = 64
+
     graphics.DrawText(canvas, font, new_pos, y, color, text)
     return new_pos
-
 def calculate_scroll_duration(text_width, max_width, shift):
 
     total_distance = max_width + text_width
@@ -63,8 +64,7 @@ def calculate_scroll_duration(text_width, max_width, shift):
 
     return duration
 # Initial positions
-scroll_pos_title, scroll_pos_artist, scroll_pos_album = 64, 34, 34
-
+scroll_pos_title, scroll_pos_artist, scroll_pos_album = 64, 64, 64
 # Individual shift values for title, artist, and album
 shift_title = -1.5
 shift_artist = -1
@@ -98,12 +98,24 @@ while True:
       
     scroll_pos_album = draw_or_scroll_text_step(offscreen_canvas, font, 34, 30, available_width, album_name, color, scroll_pos_album, shift_album)
 
-    # Check if we need to reset
-    if scroll_pos_artist <= 34 - graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name):
-        artist_wait_counter = int(artist_wait_time / 0.07)
-    if scroll_pos_album <= 34 - graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name):
-        album_wait_counter = int(album_wait_time / 0.07)
+    text_width_artist = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+    text_width_album = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
 
+    boundary = 96
+    text_width_artist = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+    text_width_album = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
+    
+    if scroll_pos_artist + text_width_artist > boundary: 
+        scroll_pos_artist += shift_artist
+    else:
+        if artist_name:
+            artist_name = artist_name[1:]
 
+            scroll_pos_artist = boundary - text_width_artist
+        else:
+            artist_name = track_info['item']['artists'][0]['name']
+            scroll_pos_artist = 64
+    print("Artist Scroll Position:", scroll_pos_artist)
+    print("Album Scroll Pos:", scroll_pos_album)
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
