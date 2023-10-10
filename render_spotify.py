@@ -41,31 +41,27 @@ def get_album_cover_image(url, target_size=(32, 24)):
     img = Image.open(BytesIO(response.content))
     img = img.resize(target_size, Image.LANCZOS)
     return img
-def draw_or_scroll_text_step(canvas, font, start_x, y, max_width, text, color, scroll_pos, shift=-1.5):
-    """
-    Draw or scroll the text. If the text width is larger than max_width, it will be scrolled.
-    Otherwise, it will be centered within the max_width.
-    """
 
-    # Calculate the width of the text
+def draw_or_scroll_text_step(canvas, font, start_x, y, max_width, text, color, scroll_pos, shift=-1.5):
     text_width = graphics.DrawText(canvas, font, -9999, -9999, color, text)
 
-    # If the text fits within the bounds, draw it centered
     if text_width <= max_width:
         centered_x = start_x + (max_width - text_width) // 2
         graphics.DrawText(canvas, font, centered_x, y, color, text)
-        return start_x  # No scrolling needed, so return the starting position
+        return start_x
 
-    # If we need to scroll, start drawing the text from the current scroll position
     new_pos = scroll_pos + shift
-    if new_pos + text_width <= start_x:  # If the text has scrolled past the left boundary, reset
-        new_pos = start_x + max_width
+    if new_pos <= start_x + max_width - text_width:
+        new_pos = start_x
     graphics.DrawText(canvas, font, new_pos, y, color, text)
     return new_pos
 
-def calculate_scroll_duration(text_width, shift):
-    return abs(text_width / shift)
+def calculate_scroll_duration(text_width, max_width, shift):
 
+    total_distance = max_width + text_width
+    duration = total_distance / abs(shift)
+
+    return duration
 # Initial positions
 scroll_pos_title, scroll_pos_artist, scroll_pos_album = 64, 34, 34
 
@@ -77,7 +73,7 @@ shift_album = -1
 album_cover = get_album_cover_image(album_cover_url)
 while True:
     offscreen_canvas = matrix.CreateFrameCanvas()
-
+    available_width = 64 - 34
     # Fetch the album cover and paste it
     for y in range(8, 32):
         for x in range(32):
@@ -85,8 +81,8 @@ while True:
             offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
 
     # Calculate durations for artist and album
-    duration_artist = calculate_scroll_duration(graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name), shift_artist)
-    duration_album = calculate_scroll_duration(graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name), shift_album)
+    duration_artist = calculate_scroll_duration(graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name), 30, shift_artist)
+    duration_album = calculate_scroll_duration(graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name), 30, shift_album)
 
     max_duration = max(duration_artist, duration_album)
 
@@ -98,21 +94,16 @@ while True:
 
     scroll_pos_title = draw_or_scroll_text_step(offscreen_canvas, font, 0, 8, 64, track_name, color, scroll_pos_title, shift_title)
     
-    if artist_wait_counter <= 0:
-        scroll_pos_artist = draw_or_scroll_text_step(offscreen_canvas, font, 34, 18, 30, artist_name, color, scroll_pos_artist, shift_artist)
-    else:
-        artist_wait_counter -= 1
-        
-    if album_wait_counter <= 0:
-        scroll_pos_album = draw_or_scroll_text_step(offscreen_canvas, font, 34, 28, 30, album_name, color, scroll_pos_album, shift_album)
-    else:
-        album_wait_counter -= 1
+    scroll_pos_artist = draw_or_scroll_text_step(offscreen_canvas, font, 34, 18, available_width, artist_name, color, scroll_pos_artist, shift_artist) 
+      
+    scroll_pos_album = draw_or_scroll_text_step(offscreen_canvas, font, 34, 30, available_width, album_name, color, scroll_pos_album, shift_album)
 
     # Check if we need to reset
-    if scroll_pos_artist == 0:
+    if scroll_pos_artist <= 34 - graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name):
         artist_wait_counter = int(artist_wait_time / 0.07)
-    if scroll_pos_album == 0:
+    if scroll_pos_album <= 34 - graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name):
         album_wait_counter = int(album_wait_time / 0.07)
+
 
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
