@@ -1,3 +1,4 @@
+import logging
 import requests
 import time
 from PIL import Image, ImageDraw, ImageFont
@@ -73,8 +74,11 @@ shift_album = -1
 
 album_cover = get_album_cover_image(album_cover_url)
 
-boundary = 100
-available_width = 64 - 34
+# ...
+log_file = open("log.txt", "a")
+
+boundary = 96
+available_width = 62
 while True:
     offscreen_canvas = matrix.CreateFrameCanvas()
 
@@ -86,18 +90,31 @@ while True:
 
     scroll_pos_title = draw_or_scroll_text_step(offscreen_canvas, font, 0, 8, 64, track_name, color, scroll_pos_title, shift_title)
     
-    # Artist scrolling and trimming
-    text_width_artist = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
-    if scroll_pos_artist + text_width_artist <= boundary and len(artist_name) > 0:
-        artist_name = artist_name[1:]
-    scroll_pos_artist = draw_or_scroll_text_step(offscreen_canvas, font, 34, 18, available_width, artist_name, color, scroll_pos_artist, shift_artist)
+    
+    # Calculate the width of the artist's name
+    text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+    # Log details
+    log_file.write(f"Artist Name: {artist_name}\n")
+    log_file.write(f"Scroll Position Artist: {scroll_pos_artist}\n")
+    log_file.write(f"Text Artist Width: {text_artist_width}\n")
 
-    # Album scrolling
-    scroll_pos_album = draw_or_scroll_text_step(offscreen_canvas, font, 34, 30, available_width, album_name, color, scroll_pos_album, shift_album)
+    # Draw the artist's name
+    graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
+    
+    # If the position of the first letter in artist_name hits the boundary, delete it
+    if len(artist_name) > 0:
+        if (scroll_pos_artist + text_artist_width) <= boundary:
+            artist_name = artist_name[1:]
+    else:
+        # Reset the scroll position if the artist's name is empty
+        scroll_pos_artist = 64
 
-    print("Artist Scroll Position:", scroll_pos_artist)
-    print("Album Scroll Pos:", scroll_pos_album)
+    # Continue scrolling
+    scroll_pos_artist += shift_artist
 
+    # Reset the scroll position if the entire artist's name is off the canvas
+    if scroll_pos_artist < -text_artist_width:
+        scroll_pos_artist = 64
+        artist_name = track_info['item']['artists'][0]['name']
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
-
