@@ -90,9 +90,9 @@ while True:
 
     scroll_pos_title = draw_or_scroll_text_step(offscreen_canvas, font, 0, 8, 64, track_name, color, scroll_pos_title, shift_title)
     
-    
     # Calculate the width of the artist's name
     text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+    
     # Log details
     log_file.write(f"Artist Name: {artist_name}\n")
     log_file.write(f"Scroll Position Artist: {scroll_pos_artist}\n")
@@ -100,17 +100,18 @@ while True:
 
     # Draw the artist's name
     graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
+    
     if scroll_pos_artist + text_artist_width > boundary:  # If the text hasn't reached the boundary
         scroll_pos_artist -= 1  # Scroll the text to the left by 1 unit
-else:
-    if len(artist_name) > 0:  # If there are characters left in the artist name
-        artist_name = artist_name[1:]  # Remove the first character
-        text_artist_width = graphics.DrawText(offscreen_canvas, font, 0, 0, color, artist_name)  # Update the text width
-        scroll_pos_artist -= 1  # Continue to scroll the text to the left by 1 unit
-    else:  # If the artist name is empty
-        artist_name = original_artist_name  # Reset the artist name for the next cycle
-        scroll_pos_artist = initial_scroll_pos  # Reset the scroll position
-        text_artist_width = graphics.DrawText(offscreen_canvas, font, 0, 0, color, artist_name)  # Update the text width
+    else:
+        if len(artist_name) > 0:  # If there are characters left in the artist name
+            artist_name = artist_name[1:]  # Remove the first character
+            text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)  # Update the text width
+            scroll_pos_artist -= 1  # Continue to scroll the text to the left by 1 unit
+        else:  # If the artist name is empty
+            artist_name = original_artist_name  # Reset the artist name for the next cycle
+            scroll_pos_artist = initial_scroll_pos  # Reset the scroll position
+            text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)  # Update the text width
  
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
