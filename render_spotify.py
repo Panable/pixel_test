@@ -48,15 +48,16 @@ def draw_or_scroll_text_step(canvas, font, start_x, y, max_width, text, color, s
     if text_width <= max_width:
         centered_x = start_x + (max_width - text_width) // 2
         graphics.DrawText(canvas, font, centered_x, y, color, text)
-        return start_x
+        return int(centered_x)
 
-    new_pos = scroll_pos + shift
+    new_pos = int(scroll_pos + shift)
     
     if new_pos <= start_x - text_width:
         new_pos = 64
 
     graphics.DrawText(canvas, font, new_pos, y, color, text)
-    return new_pos
+    return int(new_pos)
+
 def calculate_scroll_duration(text_width, max_width, shift):
 
     total_distance = max_width + text_width
@@ -71,51 +72,32 @@ shift_artist = -1
 shift_album = -1
 
 album_cover = get_album_cover_image(album_cover_url)
+
+boundary = 100
+available_width = 64 - 34
 while True:
     offscreen_canvas = matrix.CreateFrameCanvas()
-    available_width = 64 - 34
+
     # Fetch the album cover and paste it
     for y in range(8, 32):
         for x in range(32):
             pixel = album_cover.getpixel((x, y - 8))
             offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
 
-    # Calculate durations for artist and album
-    duration_artist = calculate_scroll_duration(graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name), 30, shift_artist)
-    duration_album = calculate_scroll_duration(graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name), 30, shift_album)
-
-    max_duration = max(duration_artist, duration_album)
-
-    artist_wait_time = max_duration - duration_artist
-    album_wait_time = max_duration - duration_album
-
-    artist_wait_counter = 0
-    album_wait_counter = 0
-
     scroll_pos_title = draw_or_scroll_text_step(offscreen_canvas, font, 0, 8, 64, track_name, color, scroll_pos_title, shift_title)
     
-    scroll_pos_artist = draw_or_scroll_text_step(offscreen_canvas, font, 34, 18, available_width, artist_name, color, scroll_pos_artist, shift_artist) 
-      
+    # Artist scrolling and trimming
+    text_width_artist = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+    if scroll_pos_artist + text_width_artist <= boundary and len(artist_name) > 0:
+        artist_name = artist_name[1:]
+    scroll_pos_artist = draw_or_scroll_text_step(offscreen_canvas, font, 34, 18, available_width, artist_name, color, scroll_pos_artist, shift_artist)
+
+    # Album scrolling
     scroll_pos_album = draw_or_scroll_text_step(offscreen_canvas, font, 34, 30, available_width, album_name, color, scroll_pos_album, shift_album)
 
-    text_width_artist = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
-    text_width_album = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
-
-    boundary = 96
-    text_width_artist = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
-    text_width_album = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
-    
-    if scroll_pos_artist + text_width_artist > boundary: 
-        scroll_pos_artist += shift_artist
-    else:
-        if artist_name:
-            artist_name = artist_name[1:]
-
-            scroll_pos_artist = boundary - text_width_artist
-        else:
-            artist_name = track_info['item']['artists'][0]['name']
-            scroll_pos_artist = 64
     print("Artist Scroll Position:", scroll_pos_artist)
     print("Album Scroll Pos:", scroll_pos_album)
+
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
+
