@@ -1,0 +1,655 @@
+DEBUG:root:Frame: 0
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 63
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 1
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 62
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 2
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 61
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 3
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 60
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 4
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 59
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 5
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 58
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 6
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 57
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 7
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 56
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 8
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 55
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 9
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 54
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 10
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 53
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 11
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 52
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 12
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 51
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 13
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 50
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 14
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 49
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 15
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 48
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 16
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 47
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 17
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 46
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 18
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 45
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 19
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 44
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 20
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 43
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 21
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 42
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 22
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 41
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 23
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 40
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 24
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 39
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 25
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 38
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 26
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 37
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 27
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 36
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 28
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 35
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 29
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 34
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 30
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 33
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 31
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Scroll Position: 32
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 32
+DEBUG:root:Artist Name: ason Richardson
+DEBUG:root:Scroll Position: 34
+DEBUG:root:Text Width: 64
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 33
+DEBUG:root:Artist Name: son Richardson
+DEBUG:root:Scroll Position: 36
+DEBUG:root:Text Width: 60
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 34
+DEBUG:root:Artist Name: on Richardson
+DEBUG:root:Scroll Position: 38
+DEBUG:root:Text Width: 56
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 35
+DEBUG:root:Artist Name: n Richardson
+DEBUG:root:Scroll Position: 40
+DEBUG:root:Text Width: 52
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 36
+DEBUG:root:Artist Name:  Richardson
+DEBUG:root:Scroll Position: 42
+DEBUG:root:Text Width: 48
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 37
+DEBUG:root:Artist Name: Richardson
+DEBUG:root:Scroll Position: 44
+DEBUG:root:Text Width: 44
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 38
+DEBUG:root:Artist Name: ichardson
+DEBUG:root:Scroll Position: 46
+DEBUG:root:Text Width: 40
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 39
+DEBUG:root:Artist Name: chardson
+DEBUG:root:Scroll Position: 48
+DEBUG:root:Text Width: 36
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 40
+DEBUG:root:Artist Name: hardson
+DEBUG:root:Scroll Position: 50
+DEBUG:root:Text Width: 32
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 41
+DEBUG:root:Artist Name: ardson
+DEBUG:root:Scroll Position: 52
+DEBUG:root:Text Width: 28
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 42
+DEBUG:root:Artist Name: rdson
+DEBUG:root:Scroll Position: 54
+DEBUG:root:Text Width: 24
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 43
+DEBUG:root:Artist Name: dson
+DEBUG:root:Scroll Position: 56
+DEBUG:root:Text Width: 20
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 44
+DEBUG:root:Artist Name: son
+DEBUG:root:Scroll Position: 58
+DEBUG:root:Text Width: 16
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 45
+DEBUG:root:Artist Name: on
+DEBUG:root:Scroll Position: 60
+DEBUG:root:Text Width: 12
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 46
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 62
+DEBUG:root:Text Width: 8
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 47
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 61
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 48
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 60
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 49
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 59
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 50
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 58
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 51
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 57
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 52
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 56
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 53
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 55
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 54
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 54
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 55
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 53
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 56
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 52
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 57
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 51
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 58
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 50
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 59
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 49
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 60
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 48
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 61
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 47
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 62
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 46
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 63
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 45
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 64
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 44
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 65
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 43
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 66
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 42
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 67
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 41
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 68
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 40
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 69
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 39
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 70
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 38
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 71
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 37
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 72
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 36
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 73
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 35
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 74
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 34
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 75
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 33
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 76
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 32
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 77
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 31
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 78
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 30
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 79
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 29
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 80
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 28
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 81
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 27
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 82
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 26
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 83
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 25
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 84
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 24
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 85
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 23
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 86
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 22
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 87
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 21
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 88
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 20
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 89
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 19
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 90
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 18
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 91
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 17
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 92
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 16
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 93
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 15
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 94
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 14
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 95
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 13
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 96
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 12
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 97
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 11
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 98
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 10
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 99
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 9
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 100
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 8
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 101
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 7
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 102
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 6
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 103
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 5
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 104
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 4
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 105
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 3
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 106
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 2
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 107
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 1
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 108
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: 0
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 109
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -1
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 110
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -2
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 111
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -3
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 112
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -4
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 113
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -5
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 114
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -6
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 115
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -7
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 116
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -8
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 117
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -9
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 118
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -10
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 119
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -11
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 120
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -12
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 121
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -13
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 122
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -14
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 123
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -15
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 124
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -16
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 125
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -17
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 126
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -18
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 127
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -19
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 128
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -20
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 129
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -21
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
+DEBUG:root:Frame: 130
+DEBUG:root:Artist Name: n
+DEBUG:root:Scroll Position: -22
+DEBUG:root:Text Width: 4
+DEBUG:root:Boundary: 96
