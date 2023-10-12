@@ -1,3 +1,4 @@
+import math
 import logging
 import requests
 import time
@@ -38,6 +39,8 @@ font = graphics.Font()
 font.LoadFont(font_path)
 color = graphics.Color(255, 255, 255)
 
+def calculate_deletion_rate(position, A, B, C):
+    return A * math.cos(B * position) + C
 def get_album_cover_image(url, target_size=(32, 24)):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -97,6 +100,9 @@ deletion_counter = 0.0
 # Define a deletion rate (you might adjust this to fine-tune the synchronization)
 deletion_rate = abs(shift_artist) / 1.2
 
+A = 0.5  # Amplitude
+B = 3.7 
+C = 1    # Vertical shift
 while True:
     offscreen_canvas = matrix.CreateFrameCanvas()
     
@@ -108,35 +114,27 @@ while True:
 
     # Calculate the width of the artist's name
     text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
-    
     # If the text hasn't reached the boundary
     if scroll_pos_artist + text_artist_width > boundary:  
-        # Scroll the text to the left by 1 unit
         scroll_pos_artist += shift_artist 
     else:
         # If there are characters left in the artist name
         if len(artist_name) > 1:  # Keep at least one character visible
-            # Increment the deletion counter
+            deletion_rate = calculate_deletion_rate(scroll_pos_artist, A, B, C)
             deletion_counter += deletion_rate
             # Check if it's time to delete a character
             if deletion_counter >= 1:
-                # Remove the first character
                 artist_name = artist_name[1:]  
-                # Update the text width
                 text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
-                # Reset the deletion counter
                 deletion_counter = 0.0
         else:  
-            # If the artist name is empty, reset the artist name and position for the next cycle
             artist_name = original_artist_name  
             scroll_pos_artist = 64
     
-    # Draw the artist's name
     graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
     
     time.sleep(0.07)
-    matrix.SwapOnVSync(offscreen_canvas)
-
+    matrix.SwapOnVSync(offscreen_canvas) 
     # Increment frame counter
     frame_counter += 1
    # while True:

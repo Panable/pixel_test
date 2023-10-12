@@ -86,8 +86,10 @@ deletion_counter = 0.0
 
 # Define a deletion rate
 deletion_rate = 1
+artist_name_temp = artist_name
 
 logging.basicConfig(filename='marquee_log.txt', level=logging.DEBUG)
+char_width = 4
 
 while True:
     offscreen_canvas = matrix.CreateFrameCanvas()
@@ -101,25 +103,16 @@ while True:
     # Calculate the width of the artist's name
     text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
     
+    # Scroll the text to the left by base_shift units
+    scroll_pos_artist += base_shift
+    
     # If the end of the text has crossed the boundary and there's more than one character in the artist name
     if scroll_pos_artist + text_artist_width <= boundary and len(artist_name) > 1:
         # Remove the first character
         artist_name = artist_name[1:]
-        # Compensate the scroll position for deletion
-        scroll_pos_artist -= base_shift * 2  # Compensating more to slow down deletion apparent speed
-    else:
-        # Scroll the text to the left by base_shift units
-        scroll_pos_artist += base_shift
     
     # Draw the artist's name
     graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
-    logging.debug(f'Frame: {frame_counter}')
-    logging.debug(f'Artist Name: {artist_name}')
-    logging.debug(f'Scroll Position: {scroll_pos_artist}')
-    logging.debug(f'Text Width: {text_artist_width}')
-    logging.debug(f'Boundary: {boundary}') 
+    
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
-
-    # Increment frame counter
-    frame_counter += 1
