@@ -1,12 +1,96 @@
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: 0
+DEBUG:root:Scroll Position Artist: 30
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -1
+DEBUG:root:Scroll Position Artist: 28
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 26
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 24
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 22
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 20
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 18
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 16
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 14
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 12
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 10
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 8
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 6
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 4
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 2
+DEBUG:root:Right Canvas Start X: 32
+DEBUG:root:Right Canvas Width: 32
+DEBUG:root:----
+DEBUG:root:Artist Name: Jason Richardson
+DEBUG:root:Text Artist Width: 64
+DEBUG:root:Scroll Position Artist: 0
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -18,19 +102,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -3
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -4
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -5
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -42,19 +114,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -7
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -8
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -9
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -66,19 +126,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -11
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -12
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -13
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -90,19 +138,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -15
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -16
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -17
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -114,19 +150,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -19
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -20
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -21
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -138,19 +162,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -23
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -24
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -25
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -162,19 +174,7 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -27
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -28
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -29
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
@@ -186,253 +186,43 @@ DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -31
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
 DEBUG:root:Scroll Position Artist: -32
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
+DEBUG:root:Scroll Position Artist: -33
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
+DEBUG:root:Scroll Position Artist: -33
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
+DEBUG:root:Scroll Position Artist: -33
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
+DEBUG:root:Scroll Position Artist: -33
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
+DEBUG:root:Scroll Position Artist: -33
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
 DEBUG:root:Artist Name: Jason Richardson
 DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
-DEBUG:root:Right Canvas Start X: 32
-DEBUG:root:Right Canvas Width: 32
-DEBUG:root:----
-DEBUG:root:Artist Name: Jason Richardson
-DEBUG:root:Text Artist Width: 64
-DEBUG:root:Scroll Position Artist: -32
+DEBUG:root:Scroll Position Artist: -33
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----

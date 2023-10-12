@@ -100,12 +100,14 @@ try:
         scroll_pos_artist = max(scroll_pos_artist - 1, right_canvas_start_x - text_artist_width)
 
         # Ensure text does not scroll beyond the right boundary of the right-side canvas
-        if scroll_pos_artist > right_canvas_start_x + right_canvas_width - text_artist_width:
-            scroll_pos_artist = right_canvas_start_x + right_canvas_width - text_artist_width
-
-        # Draw text only within the right-side canvas
-        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
+        # Ensure the text starts off the right-side of the canvas and scrolls leftwards
+        if scroll_pos_artist + text_artist_width < right_canvas_start_x:
+            scroll_pos_artist = right_canvas_start_x + right_canvas_width
+        else:
+            scroll_pos_artist -= 1  # Adjust speed as needed
         
+        # Draw text only within the right-side canvas without overlapping the album cover
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)      
         # Logging
         logging.debug(f"Artist Name: {artist_name}")
         logging.debug(f"Text Artist Width: {text_artist_width}")
