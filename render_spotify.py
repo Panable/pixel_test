@@ -97,17 +97,18 @@ try:
         text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
         
         # Scroll the artist's name
-        scroll_pos_artist = max(scroll_pos_artist - 1, right_canvas_start_x - text_artist_width)
+        scroll_pos_artist -= 1
 
-        # Ensure text does not scroll beyond the right boundary of the right-side canvas
-        # Ensure the text starts off the right-side of the canvas and scrolls leftwards
-        if scroll_pos_artist + text_artist_width < right_canvas_start_x:
+        # Reset position of the text when it completely goes off the canvas to create a continuous scrolling effect
+        if scroll_pos_artist < right_canvas_start_x - text_artist_width:
             scroll_pos_artist = right_canvas_start_x + right_canvas_width
-        else:
-            scroll_pos_artist -= 1  # Adjust speed as needed
-        
-        # Draw text only within the right-side canvas without overlapping the album cover
-        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)      
+
+        # Draw text and then mask it by the right canvas boundary
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
+        for y in range(32):  # Assuming the canvas is 32 pixels tall
+            for x in range(32):  # Clear any text that might be displayed on the left canvas
+                offscreen_canvas.SetPixel(x, y, 0, 0, 0)
+
         # Logging
         logging.debug(f"Artist Name: {artist_name}")
         logging.debug(f"Text Artist Width: {text_artist_width}")
@@ -118,6 +119,7 @@ try:
 
         matrix.SwapOnVSync(offscreen_canvas)
         time.sleep(0.07)
+
 except KeyboardInterrupt:
     # Graceful exit on Ctrl+C
     pass
@@ -125,3 +127,4 @@ finally:
     # Ensure the matrix is cleared on exit
     offscreen_canvas.Clear()
     matrix.SwapOnVSync(offscreen_canvas)
+
