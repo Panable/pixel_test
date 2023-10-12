@@ -77,49 +77,69 @@ album_cover = get_album_cover_image(album_cover_url)
 
 # ...
 log_file = open("log.txt", "a")
+scroll_pos_artist = 64
 
-boundary = 96
-available_width = 62
+boundary = 96  # X coordinate boundary after which letters should start being deleted
+shift_artist = -1  # Shift per frame in pixels
+# Save the original artist name for resetting later
+original_artist_name = artist_name
+
+# Initialize a frame counter
+frame_counter = 0
+deleted_chars = 0
+
+# Initialize a frame counter
+frame_counter = 0
+
+# Initialize a deletion counter
+deletion_counter = 0.0
+
+# Define a deletion rate (you might adjust this to fine-tune the synchronization)
+deletion_rate = abs(shift_artist) / 1.2
+
 while True:
     offscreen_canvas = matrix.CreateFrameCanvas()
-
+    
     # Fetch the album cover and paste it
     for y in range(8, 32):
         for x in range(32):
             pixel = album_cover.getpixel((x, y - 8))
             offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
 
-    scroll_pos_title = draw_or_scroll_text_step(offscreen_canvas, font, 0, 8, 64, track_name, color, scroll_pos_title, shift_title)
-    
     # Calculate the width of the artist's name
     text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
     
-    # Log details
-    log_file.write(f"Artist Name: {artist_name}\n")
-    log_file.write(f"Scroll Position Artist: {scroll_pos_artist}\n")
-    log_file.write(f"Text Artist Width: {text_artist_width}\n")
-
-    # Adjust the scroll speed based on the proportion of the current text length to the original text length.
-    scroll_speed = 1.5 * len(artist_name) / len(original_artist_name)
-
-    # If the scroll position plus the width of the artist's name is still greater than the boundary, keep scrolling.
-    if scroll_pos_artist + text_artist_width > boundary:
-        scroll_pos_artist -= scroll_speed
+    # If the text hasn't reached the boundary
+    if scroll_pos_artist + text_artist_width > boundary:  
+        # Scroll the text to the left by 1 unit
+        scroll_pos_artist += shift_artist 
     else:
-        # If there's still text left to display, remove the first character and adjust the scroll position.
-        if len(artist_name) > 0:
-            artist_name = artist_name[1:]
-        else:
-            # Reset if there's no text left.
-            artist_name = original_artist_name
+        # If there are characters left in the artist name
+        if len(artist_name) > 1:  # Keep at least one character visible
+            # Increment the deletion counter
+            deletion_counter += deletion_rate
+            # Check if it's time to delete a character
+            if deletion_counter >= 1:
+                # Remove the first character
+                artist_name = artist_name[1:]  
+                # Update the text width
+                text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+                # Reset the deletion counter
+                deletion_counter = 0.0
+        else:  
+            # If the artist name is empty, reset the artist name and position for the next cycle
+            artist_name = original_artist_name  
             scroll_pos_artist = 64
-
+    
+    # Draw the artist's name
     graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
     
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
 
-# while True:
+    # Increment frame counter
+    frame_counter += 1
+   # while True:
 #     offscreen_canvas = matrix.CreateFrameCanvas()
 # 
 #     # Fetch the album cover and paste it
