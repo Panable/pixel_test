@@ -11632,3 +11632,17 @@ DEBUG:root:Scroll Position Artist: -9
 DEBUG:root:Right Canvas Start X: 32
 DEBUG:root:Right Canvas Width: 32
 DEBUG:root:----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): i.scdn.co:443
+DEBUG:urllib3.connectionpool:https://i.scdn.co:443 "GET /image/ab67616d0000b27337ee498bbf50771a83215008 HTTP/1.1" 200 266385
