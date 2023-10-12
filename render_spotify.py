@@ -17,6 +17,7 @@ track_info = sp.current_playback()
 
 track_name = track_info['item']['name']
 artist_name = track_info['item']['artists'][0]['name']
+original_artist_name = artist_name
 album_name = track_info['item']['album']['name']
 album_cover_url = track_info['item']['album']['images'][0]['url']
 
@@ -98,20 +99,58 @@ while True:
     log_file.write(f"Scroll Position Artist: {scroll_pos_artist}\n")
     log_file.write(f"Text Artist Width: {text_artist_width}\n")
 
-    # Draw the artist's name
+    # Adjust the scroll speed based on the proportion of the current text length to the original text length.
+    scroll_speed = 1.5 * len(artist_name) / len(original_artist_name)
+
+    # If the scroll position plus the width of the artist's name is still greater than the boundary, keep scrolling.
+    if scroll_pos_artist + text_artist_width > boundary:
+        scroll_pos_artist -= scroll_speed
+    else:
+        # If there's still text left to display, remove the first character and adjust the scroll position.
+        if len(artist_name) > 0:
+            artist_name = artist_name[1:]
+        else:
+            # Reset if there's no text left.
+            artist_name = original_artist_name
+            scroll_pos_artist = 64
+
     graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
     
-    if scroll_pos_artist + text_artist_width > boundary:  # If the text hasn't reached the boundary
-        scroll_pos_artist -= 1  # Scroll the text to the left by 1 unit
-    else:
-        if len(artist_name) > 0:  # If there are characters left in the artist name
-            artist_name = artist_name[1:]  # Remove the first character
-            text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)  # Update the text width
-            scroll_pos_artist -= 1  # Continue to scroll the text to the left by 1 unit
-        else:  # If the artist name is empty
-            artist_name = original_artist_name  # Reset the artist name for the next cycle
-            scroll_pos_artist = initial_scroll_pos  # Reset the scroll position
-            text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)  # Update the text width
- 
     time.sleep(0.07)
     matrix.SwapOnVSync(offscreen_canvas)
+
+# while True:
+#     offscreen_canvas = matrix.CreateFrameCanvas()
+# 
+#     # Fetch the album cover and paste it
+#     for y in range(8, 32):
+#         for x in range(32):
+#             pixel = album_cover.getpixel((x, y - 8))
+#             offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
+# 
+#     scroll_pos_title = draw_or_scroll_text_step(offscreen_canvas, font, 0, 8, 64, track_name, color, scroll_pos_title, shift_title)
+#     
+#     # Calculate the width of the artist's name
+#     text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+#     
+#     # Log details
+#     log_file.write(f"Artist Name: {artist_name}\n")
+#     log_file.write(f"Scroll Position Artist: {scroll_pos_artist}\n")
+#     log_file.write(f"Text Artist Width: {text_artist_width}\n")
+# 
+#     # If the scroll position plus the width of the artist's name is still greater than the boundary, keep scrolling.
+#     if scroll_pos_artist + text_artist_width > boundary:
+#         scroll_pos_artist -= 1
+#     else:
+#         # If there's still text left to display, remove the first character and adjust the scroll position.
+#         if len(artist_name) > 0:
+#             artist_name = artist_name[1:]
+#         else:
+#             # Reset if there's no text left.
+#             artist_name = original_artist_name
+#             scroll_pos_artist = 64
+# 
+#     graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
+#     
+#     time.sleep(0.07)
+#     matrix.SwapOnVSync(offscreen_canvas)
