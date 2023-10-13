@@ -59,7 +59,7 @@ class WindowCanvas:
             for x in range(self.width):
                 self.set_pixel(x, y, r, g, b)
 # Get the album cover image
-def get_album_cover_image(url, target_size=(32, 32)):
+def get_album_cover_image(url, target_size=(26, 26)):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))  # Using BytesIO to handle binary content
     img = img.resize(target_size, Image.LANCZOS)
@@ -88,16 +88,18 @@ CLEAR_COLOR = graphics.Color(0, 0, 0)  # Black for now, but you can change this
 
 RIGHT_CANVAS_START_X = 32
 RIGHT_CANVAS_END_X = 63
+ALBUM_COVER_Y_POSITION = (32 - 26) // 2  # Adjusting for the new album cover size of 26x26
+
 try:
     while True:
         offscreen_canvas = matrix.CreateFrameCanvas()
 
         # Draw the album cover on the left half
-        for y in range(32):  # Full height
-            for x in range(32):  # Only the left half
-                pixel = album_cover.getpixel((x, y))
+        for y in range(3, 3 + 26):  # Adjusted range
+            for x in range(3, 3 + 26):  # Adjusted range
+                # Fetch the pixel from the album cover starting from (0, 0)
+                pixel = album_cover.getpixel((x - 3, y - 3))
                 offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
-
         # Calculate the width of the artist's name
         text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
         
@@ -129,11 +131,15 @@ try:
         # Draw album text
         graphics.DrawText(offscreen_canvas, font, scroll_pos_album, 26, color, album_name)
         # Ensure any text that might overlap with the left canvas is cleared
-        for y in range(32):  # Assuming the canvas is 32 pixels tall
-            for x in range(32):  # Only the left half
-                pixel = album_cover.getpixel((x, y))
-                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
-
+        for y in range(3, 3 + 26):  # Adjusted range
+            for x in range(3, 3 + 26):  # Adjusted range
+                # Fetch the pixel from the album cover starting from (0, 0)
+                pixel = album_cover.getpixel((x - 3, y - 3))
+                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2]) 
+        for y in range(32):  # Assuming the canvas height is 32 pixels
+            offscreen_canvas.SetPixel(0, y, 0, 0, 0)  # Set the first column pixel to black
+            offscreen_canvas.SetPixel(1, y, 0, 0, 0)  # Set the second column pixel to black
+            offscreen_canvas.SetPixel(2, y, 0, 0, 0)
         # Logging
         logging.debug(f"Artist Name: {artist_name}")
         logging.debug(f"Text Artist Width: {text_artist_width}")
