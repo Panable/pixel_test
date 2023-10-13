@@ -58,10 +58,11 @@ class WindowCanvas:
         for y in range(self.height):
             for x in range(self.width):
                 self.set_pixel(x, y, r, g, b)
-# Get the album cover image
+# Get album image
 def get_album_cover_image(url, target_size=(26, 26)):
     response = requests.get(url)
-    img = Image.open(BytesIO(response.content))  # Using BytesIO to handle binary content
+    img = Image.open(BytesIO(response.content))
+    img = img.convert("RGB")  # Ensure the image is in RGB mode
     img = img.resize(target_size, Image.LANCZOS)
     return img
 album_cover = get_album_cover_image(album_cover_url)
@@ -70,14 +71,14 @@ album_cover = get_album_cover_image(album_cover_url)
 album_cover_window = WindowCanvas(matrix, 32, 32, 0, 0)
 text_window = WindowCanvas(matrix, 32, 32, 32, 0)
 
-# Main loop
 scroll_pos_artist = 64
 scroll_pos_album = 64
-shift_artist = -1  # Shift per frame in pixels
+scroll_pos_track = 64
+shift_artist = -1
 
 # Define the start x-position and width of the right-side canvas
-right_canvas_start_x = 32  # Assuming the left-side canvas (album cover) is 32 pixels wide
-right_canvas_width = 32    # Assuming the right-side canvas is also 32 pixels wide
+right_canvas_start_x = 32 - 4 
+right_canvas_width = 32    
 
 # Initial position of the artist name
 scroll_pos_artist = right_canvas_start_x
@@ -88,19 +89,22 @@ CLEAR_COLOR = graphics.Color(0, 0, 0)  # Black for now, but you can change this
 
 RIGHT_CANVAS_START_X = 32
 RIGHT_CANVAS_END_X = 63
-ALBUM_COVER_Y_POSITION = (32 - 26) // 2  # Adjusting for the new album cover size of 26x26
+ALBUM_COVER_Y_POSITION = 32 - 22 - 2  
+ALBUM_COVER_X_POSITION = 2
+TRACK_Y_POSITION = 7
 
+track_name_color = graphics.Color(29, 185, 84)
 try:
     while True:
         offscreen_canvas = matrix.CreateFrameCanvas()
 
         # Draw the album cover on the left half
-        for y in range(3, 3 + 26):  # Adjusted range
-            for x in range(3, 3 + 26):  # Adjusted range
-                # Fetch the pixel from the album cover starting from (0, 0)
-                pixel = album_cover.getpixel((x - 3, y - 3))
+        for y in range(ALBUM_COVER_Y_POSITION, ALBUM_COVER_Y_POSITION + 22):  
+            for x in range(ALBUM_COVER_X_POSITION, ALBUM_COVER_X_POSITION + 22):
+                pixel = album_cover.getpixel((x - ALBUM_COVER_X_POSITION, y - ALBUM_COVER_Y_POSITION))
                 offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
-        # Calculate the width of the artist's name
+
+                # Calculate the width of the artist's name
         text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
         
         if text_artist_width > right_canvas_width:
@@ -129,17 +133,29 @@ try:
             scroll_pos_album = right_canvas_start_x + (right_canvas_width - text_album_width) // 2
         
         # Draw album text
-        graphics.DrawText(offscreen_canvas, font, scroll_pos_album, 26, color, album_name)
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_album, 25, color, album_name)
         # Ensure any text that might overlap with the left canvas is cleared
-        for y in range(3, 3 + 26):  # Adjusted range
-            for x in range(3, 3 + 26):  # Adjusted range
-                # Fetch the pixel from the album cover starting from (0, 0)
-                pixel = album_cover.getpixel((x - 3, y - 3))
-                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2]) 
+        for y in range(ALBUM_COVER_Y_POSITION, ALBUM_COVER_Y_POSITION + 22):  
+            for x in range(ALBUM_COVER_X_POSITION, ALBUM_COVER_X_POSITION + 22):
+                pixel = album_cover.getpixel((x - ALBUM_COVER_X_POSITION, y - ALBUM_COVER_Y_POSITION))
+                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
+        
         for y in range(32):  # Assuming the canvas height is 32 pixels
             offscreen_canvas.SetPixel(0, y, 0, 0, 0)  # Set the first column pixel to black
             offscreen_canvas.SetPixel(1, y, 0, 0, 0)  # Set the second column pixel to black
-            offscreen_canvas.SetPixel(2, y, 0, 0, 0)
+        text_track_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, track_name_color, track_name)
+         
+        if text_track_width > 64:  # Assuming the entire matrix width is 64 pixels
+            # Scroll the track's name
+            scroll_pos_track -= 1
+            # Reset position of the track name when it goes off the canvas
+            if scroll_pos_track < -text_track_width:
+                scroll_pos_track = 64
+        else:
+            # Center the track's name if it's shorter than the matrix width
+            scroll_pos_track = (64 - text_track_width) // 2 
+        text_track_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, track_name)
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_track, TRACK_Y_POSITION, track_name_color, track_name)
         # Logging
         logging.debug(f"Artist Name: {artist_name}")
         logging.debug(f"Text Artist Width: {text_artist_width}")
@@ -152,10 +168,8 @@ try:
         time.sleep(0.07)
 
 except KeyboardInterrupt:
-    # Graceful exit on Ctrl+C
     pass
 finally:
-    # Ensure the matrix is cleared on exit
     offscreen_canvas.Clear()
     matrix.SwapOnVSync(offscreen_canvas)
 
