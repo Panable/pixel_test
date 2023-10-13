@@ -101,24 +101,32 @@ try:
         # Calculate the width of the artist's name
         text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
         
-        # Scroll the artist's name
-        scroll_pos_artist -= 1
-
-        # Reset position of the text when it completely goes off the canvas to create a continuous scrolling effect
-        if scroll_pos_artist < right_canvas_start_x - text_artist_width:
-            scroll_pos_artist = right_canvas_start_x + right_canvas_width
-
-        # Draw text 
-        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
-       
-
-        text_album_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
-
-        scroll_pos_album -= 1
+        if text_artist_width > right_canvas_width:
+            # Scroll the artist's name
+            scroll_pos_artist -= 1
+            # Reset position of the artist name when it goes off the canvas
+            if scroll_pos_artist < right_canvas_start_x - text_artist_width:
+                scroll_pos_artist = right_canvas_start_x + right_canvas_width
+        else:
+            # Center the artist's name if it's shorter than the canvas width
+            scroll_pos_artist = right_canvas_start_x + (right_canvas_width - text_artist_width) // 2
         
-        if scroll_pos_album < right_canvas_start_x - text_artist_width:
-            scroll_pos_artist = right_canvas_start_x + right_canvas_width
-
+        # Draw artist text
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)       
+        # Calculate the width of the album's name
+        text_album_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
+        
+        if text_album_width > right_canvas_width:
+            # Scroll the album's name
+            scroll_pos_album -= 1
+            # Reset position of the album name when it goes off the canvas
+            if scroll_pos_album < right_canvas_start_x - text_album_width:
+                scroll_pos_album = right_canvas_start_x + right_canvas_width
+        else:
+            # Center the album's name if it's shorter than the canvas width
+            scroll_pos_album = right_canvas_start_x + (right_canvas_width - text_album_width) // 2
+        
+        # Draw album text
         graphics.DrawText(offscreen_canvas, font, scroll_pos_album, 26, color, album_name)
         # Ensure any text that might overlap with the left canvas is cleared
         for y in range(32):  # Assuming the canvas is 32 pixels tall
