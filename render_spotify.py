@@ -20,7 +20,8 @@ track_name = track_info['item']['name']
 artist_name = track_info['item']['artists'][0]['name']
 original_artist_name = artist_name
 album_cover_url = track_info['item']['album']['images'][0]['url']
-
+album_name = track_info['item']['album']['name']
+# Matrix setup
 options = RGBMatrixOptions()
 options.rows = 32
 options.cols = 64
@@ -57,13 +58,13 @@ class WindowCanvas:
         for y in range(self.height):
             for x in range(self.width):
                 self.set_pixel(x, y, r, g, b)
-
 # Get the album cover image
-def get_album_cover_image(url, target_size=(32, 24)):
+def get_album_cover_image(url, target_size=(32, 32)):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))  # Using BytesIO to handle binary content
     img = img.resize(target_size, Image.LANCZOS)
     return img
+album_cover = get_album_cover_image(album_cover_url)
 
 # Create two window canvases: one for the album cover and one for the text
 album_cover_window = WindowCanvas(matrix, 32, 32, 0, 0)
@@ -71,6 +72,7 @@ text_window = WindowCanvas(matrix, 32, 32, 32, 0)
 
 # Main loop
 scroll_pos_artist = 64
+scroll_pos_album = 64
 shift_artist = -1  # Shift per frame in pixels
 
 # Define the start x-position and width of the right-side canvas
@@ -81,22 +83,21 @@ right_canvas_width = 32    # Assuming the right-side canvas is also 32 pixels wi
 scroll_pos_artist = right_canvas_start_x
 
 logging.basicConfig(filename='scrolling_text.log', level=logging.DEBUG)
-album_cover = get_album_cover_image(album_cover_url, target_size=(32, 32))
 
+CLEAR_COLOR = graphics.Color(0, 0, 0)  # Black for now, but you can change this
 
+RIGHT_CANVAS_START_X = 32
+RIGHT_CANVAS_END_X = 63
 try:
     while True:
         offscreen_canvas = matrix.CreateFrameCanvas()
 
-        # Print statements for debugging
-        print("Entering Main Loop...")
-        
-        # Draw the album cover
-        print("Rendering Album Cover on Canvas...")
-        for y in range(32):
-            for x in range(32):
+        # Draw the album cover on the left half
+        for y in range(32):  # Full height
+            for x in range(32):  # Only the left half
                 pixel = album_cover.getpixel((x, y))
-                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2]) 
+                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
+
         # Calculate the width of the artist's name
         text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
         
@@ -107,20 +108,31 @@ try:
         if scroll_pos_artist < right_canvas_start_x - text_artist_width:
             scroll_pos_artist = right_canvas_start_x + right_canvas_width
 
-        # Draw text and then mask it by the right canvas boundary
-        print("Rendering Text on Canvas...")
+        # Draw text 
         graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
+       
+
+        text_album_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
+
+        scroll_pos_album -= 1
+        
+        if scroll_pos_album < right_canvas_start_x - text_artist_width:
+            scroll_pos_artist = right_canvas_start_x + right_canvas_width
+
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_album, 26, color, album_name)
+        # Ensure any text that might overlap with the left canvas is cleared
         for y in range(32):  # Assuming the canvas is 32 pixels tall
-            for x in range(64):  # Clear any text that might be displayed on the left canvas
+            for x in range(32):  # Only the left half
                 pixel = album_cover.getpixel((x, y))
                 offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
+
         # Logging
-        print(f"Artist Name: {artist_name}")
-        print(f"Text Artist Width: {text_artist_width}")
-        print(f"Scroll Position Artist: {scroll_pos_artist}")
-        print(f"Right Canvas Start X: {right_canvas_start_x}")
-        print(f"Right Canvas Width: {right_canvas_width}")
-        print("----")
+        logging.debug(f"Artist Name: {artist_name}")
+        logging.debug(f"Text Artist Width: {text_artist_width}")
+        logging.debug(f"Scroll Position Artist: {scroll_pos_artist}")
+        logging.debug(f"Right Canvas Start X: {right_canvas_start_x}")
+        logging.debug(f"Right Canvas Width: {right_canvas_width}")
+        logging.debug("----")
 
         matrix.SwapOnVSync(offscreen_canvas)
         time.sleep(0.07)
@@ -132,3 +144,4 @@ finally:
     # Ensure the matrix is cleared on exit
     offscreen_canvas.Clear()
     matrix.SwapOnVSync(offscreen_canvas)
+
