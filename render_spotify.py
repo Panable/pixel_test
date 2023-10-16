@@ -1,3 +1,4 @@
+from flask import Flask, request, jsonify
 import requests
 import logging
 from io import BytesIO
@@ -7,11 +8,15 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from io import BytesIO
+import base64
+import websocket
+import json
 
+app = Flask(__name__)
 # Spotify setup (Note: Replace these placeholder values with actual ones.)
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id="YOUR_CLIENT_ID",
-                                               client_secret="YOUR_CLIENT_SECRET",
-                                               redirect_uri="YOUR_REDIRECT_URI",
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id="0bd953803d7c40049e275816cc208579",
+                                               client_secret="4442c4bde22048808a3b05a600323164",
+                                               redirect_uri="http://localhost:8000/callback",
                                                scope="user-read-currently-playing user-read-playback-state"))
 
 # Retrieve track information
@@ -23,11 +28,11 @@ album_cover_url = track_info['item']['album']['images'][0]['url']
 album_name = track_info['item']['album']['name']
 # Matrix setup
 options = RGBMatrixOptions()
-options.rows = 32
+options.rows = 32 
 options.cols = 64
 options.chain_length = 1
 options.parallel = 1
-options.hardware_mapping = 'adafruit-hat'
+options.hardware_mapping = 'adafruit-hat-pwm'
 options.gpio_slowdown = 4 
 matrix = RGBMatrix(options=options)
 
@@ -58,13 +63,64 @@ class WindowCanvas:
         for y in range(self.height):
             for x in range(self.width):
                 self.set_pixel(x, y, r, g, b)
-# Get album image
+@app.route('/refresh_token', methods=['GET'])
+def refresh_token_endpoint():
+    global current_access_token, current_refresh_token
+
+    refresh_token = request.args.get('refresh_token')
+    auth_string = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
+    
+    headers = {
+        'Authorization': f'Basic {auth_string}'
+    }
+    data = {
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token
+    }
+    
+    response = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data)
+    
+    if response.status_code == 200:
+        current_access_token = response.json().get('access_token')
+        current_refresh_token = response.json().get('refresh_token', current_refresh_token)
+        return jsonify(access_token=current_access_token)
+    else:
+        return "Error refreshing token", 400
+
+
+def refresh_token():
+    global current_access_token
+
+    response = requests.get(f"http://localhost:5000/refresh_token?refresh_token={current_refresh_token}")
+    if response.status_code == 200:
+        current_access_token = response.json().get('access_token')
+        return current_access_token
+    else:
+        # Handle the error
+        return None
+#Get album image
 def get_album_cover_image(url, target_size=(26, 26)):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
     img = img.convert("RGB")  # Ensure the image is in RGB mode
     img = img.resize(target_size, Image.LANCZOS)
     return img
+if __name__ == "__main__":
+    # Run the Flask app on a different thread so it doesn't block the main execution
+    from threading import Thread
+    t = Thread(target=app.run, kwargs={'debug': False})
+    t.start()
+
+def on_message(ws, message):
+    data = json.loads(message)
+    if 'event' in data:
+        event_type = data['event']
+        if event_type == 'track_change':
+            track_info = data['track']
+            update_matrix_display(track_info)
+
+def update_matrix_display(track_info):
+    global track_name, artist_name, album_cover, album_name, current_track_id
 album_cover = get_album_cover_image(album_cover_url)
 
 # Create two window canvases: one for the album cover and one for the text
@@ -94,10 +150,22 @@ ALBUM_COVER_X_POSITION = 2
 TRACK_Y_POSITION = 7
 
 track_name_color = graphics.Color(29, 185, 84)
+prev_track_id = None
+offscreen_canvas = matrix.CreateFrameCanvas()
+last_polled_time = 0
+last_known_timestamp = 0
+current_track_id = None
 try:
     while True:
-        offscreen_canvas = matrix.CreateFrameCanvas()
-
+#        offscreen_canvas = matrix.CreateFrameCanvas()
+        current_time = time.time()
+        if current_time - last_polled_time >= 1:  # Check every 5 seconds for track changes
+            previous_track_id = current_track_id
+            new_track_id = update_track_details()
+            if previous_track_id != new_track_id:  # A track change was detected
+                offscreen_canvas.Clear()
+            last_polled_time = current_time
+        offscreen_canvas.Clear() 
         # Draw the album cover on the left half
         for y in range(ALBUM_COVER_Y_POSITION, ALBUM_COVER_Y_POSITION + 22):  
             for x in range(ALBUM_COVER_X_POSITION, ALBUM_COVER_X_POSITION + 22):
