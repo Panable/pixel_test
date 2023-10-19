@@ -1,5 +1,6 @@
 import requests
 import logging
+from io import BytesIO
 import time
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
@@ -7,19 +8,19 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from io import BytesIO
 
-# Spotify setup
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id="YOUR_CLIENT_ID",
-                                               client_secret="YOUR_CLIENT_SECRET",
-                                               redirect_uri="YOUR_REDIRECT_URI",
-                                               scope="user-read-currently-playing user-read-playback-state"))
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id="0bd953803d7c40049e275816cc208579",
+                     client_secret="4442c4bde22048808a3b05a600323164",
+                     redirect_uri="http://localhost:8000",
+                     scope="user-read-currently-playing user-read-playback-state"))
 
+# Retrieve track information
 track_info = sp.current_playback()
 track_name = track_info['item']['name']
 artist_name = track_info['item']['artists'][0]['name']
 original_artist_name = artist_name
-album_name = track_info['item']['album']['name']
 album_cover_url = track_info['item']['album']['images'][0]['url']
-# Matrix setup stuff
+album_name = track_info['item']['album']['name']
+# Matrix setup
 options = RGBMatrixOptions()
 options.rows = 32
 options.cols = 64
@@ -34,85 +35,139 @@ font = graphics.Font()
 font.LoadFont(font_path)
 color = graphics.Color(255, 255, 255)
 
-def get_album_cover_image(url, target_size=(32, 24)):
+class WindowCanvas:
+    def __init__(self, delegatee, width, height, offset_x, offset_y):
+        self.delegatee = delegatee
+        self.width = width
+        self.height = height
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+    
+    def set_pixel(self, x, y, r, g, b):
+        if x < 0 or x >= self.width or y < 0 or y >= self.height:
+            return  # Clip to prevent drawing outside the window
+        self.delegatee.SetPixel(x + self.offset_x, y + self.offset_y, r, g, b)
+    
+    def clear(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                self.set_pixel(x, y, 0, 0, 0)
+    
+    def fill(self, r, g, b):
+        for y in range(self.height):
+            for x in range(self.width):
+                self.set_pixel(x, y, r, g, b)
+# Get album image
+def get_album_cover_image(url, target_size=(26, 26)):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
+    img = img.convert("RGB")  # Ensure the image is in RGB mode
     img = img.resize(target_size, Image.LANCZOS)
     return img
-
-def calculate_frames(text_width, display_width, offset_start, offset_end, delay):
-    total_distance = display_width + text_width + offset_start + offset_end
-    return total_distance + delay
-
-def scroll_text(canvas, text, text_width, frame_idx, start_x, y, display_width, offset_start, offset_end, delay, color, font):
-    # If we're still in the delay phase, draw the text at the starting offset
-    if frame_idx < delay:
-        graphics.DrawText(canvas, font, start_x + offset_start, y, color, text)
-        return
-    
-    # Calculate the effective frame index by deducting the delay
-    effective_frame = frame_idx - delay
-    
-    # Calculate the position to draw the text
-    draw_position = start_x + offset_start - effective_frame
-    
-    # If we've scrolled past the end offset, loop back to the start
-    if draw_position < -text_width - offset_end:
-        draw_position = start_x + offset_start
-    
-    graphics.DrawText(canvas, font, draw_position, y, color, text)
-
 album_cover = get_album_cover_image(album_cover_url)
 
-# Initialize frame index
-frame_idx = 0
+# Create two window canvases: one for the album cover and one for the text
+album_cover_window = WindowCanvas(matrix, 32, 32, 0, 0)
+text_window = WindowCanvas(matrix, 32, 32, 32, 0)
 
-# Define parameters for the scrolling
-offset_start = 5
-offset_end = 5
-delay = 30  # Delay in frames
-
-# Initial positions
 scroll_pos_artist = 64
+scroll_pos_album = 64
+scroll_pos_track = 64
+shift_artist = -1
 
-base_shift = -1  # Shift per frame in pixels
-boundary = 96  # X coordinate boundary after which letters should start being deleted
+# Define the start x-position and width of the right-side canvas
+right_canvas_start_x = 32 - 4 
+right_canvas_width = 32    
 
-# Initialize a frame counter
-frame_counter = 0
+# Initial position of the artist name
+scroll_pos_artist = right_canvas_start_x
 
-# Initialize a deletion counter
-deletion_counter = 0.0
 
-# Define a deletion rate
-deletion_rate = 1
-artist_name_temp = artist_name
+CLEAR_COLOR = graphics.Color(0, 0, 0)  # Black for now, but you can change this
 
-logging.basicConfig(filename='marquee_log.txt', level=logging.DEBUG)
-char_width = 4
+RIGHT_CANVAS_START_X = 32
+RIGHT_CANVAS_END_X = 63
+ALBUM_COVER_Y_POSITION = 32 - 22 - 2  
+ALBUM_COVER_X_POSITION = 2
+TRACK_Y_POSITION = 7
 
-while True:
-    offscreen_canvas = matrix.CreateFrameCanvas()
-    
-    # Fetch the album cover and paste it
-    for y in range(8, 32):
-        for x in range(32):
-            pixel = album_cover.getpixel((x, y - 8))
-            offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
-    
-    # Calculate the width of the artist's name
-    text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
-    
-    # Scroll the text to the left by base_shift units
-    scroll_pos_artist += base_shift
-    
-    # If the end of the text has crossed the boundary and there's more than one character in the artist name
-    if scroll_pos_artist + text_artist_width <= boundary and len(artist_name) > 1:
-        # Remove the first character
-        artist_name = artist_name[1:]
-    
-    # Draw the artist's name
-    graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)
-    
-    time.sleep(0.07)
+track_name_color = graphics.Color(29, 185, 84)
+try:
+    while True:
+        offscreen_canvas = matrix.CreateFrameCanvas()
+
+        # Draw the album cover on the left half
+        for y in range(ALBUM_COVER_Y_POSITION, ALBUM_COVER_Y_POSITION + 22):  
+            for x in range(ALBUM_COVER_X_POSITION, ALBUM_COVER_X_POSITION + 22):
+                pixel = album_cover.getpixel((x - ALBUM_COVER_X_POSITION, y - ALBUM_COVER_Y_POSITION))
+                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
+
+                # Calculate the width of the artist's name
+        text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
+        
+        if text_artist_width > right_canvas_width:
+            # Scroll the artist's name
+            scroll_pos_artist -= 1
+            # Reset position of the artist name when it goes off the canvas
+            if scroll_pos_artist < right_canvas_start_x - text_artist_width:
+                scroll_pos_artist = right_canvas_start_x + right_canvas_width
+        else:
+            # Center the artist's name if it's shorter than the canvas width
+            scroll_pos_artist = right_canvas_start_x + (right_canvas_width - text_artist_width) // 2
+        
+        # Draw artist text
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_artist, 18, color, artist_name)       
+        # Calculate the width of the album's name
+        text_album_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, album_name)
+        
+        if text_album_width > right_canvas_width:
+            # Scroll the album's name
+            scroll_pos_album -= 1
+            # Reset position of the album name when it goes off the canvas
+            if scroll_pos_album < right_canvas_start_x - text_album_width:
+                scroll_pos_album = right_canvas_start_x + right_canvas_width
+        else:
+            # Center the album's name if it's shorter than the canvas width
+            scroll_pos_album = right_canvas_start_x + (right_canvas_width - text_album_width) // 2
+        
+        # Draw album text
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_album, 25, color, album_name)
+        # Ensure any text that might overlap with the left canvas is cleared
+        for y in range(ALBUM_COVER_Y_POSITION, ALBUM_COVER_Y_POSITION + 22):  
+            for x in range(ALBUM_COVER_X_POSITION, ALBUM_COVER_X_POSITION + 22):
+                pixel = album_cover.getpixel((x - ALBUM_COVER_X_POSITION, y - ALBUM_COVER_Y_POSITION))
+                offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
+        
+        for y in range(32):  # Assuming the canvas height is 32 pixels
+            offscreen_canvas.SetPixel(0, y, 0, 0, 0)  # Set the first column pixel to black
+            offscreen_canvas.SetPixel(1, y, 0, 0, 0)  # Set the second column pixel to black
+        text_track_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, track_name_color, track_name)
+         
+        if text_track_width > 64:  # Assuming the entire matrix width is 64 pixels
+            # Scroll the track's name
+            scroll_pos_track -= 1
+            # Reset position of the track name when it goes off the canvas
+            if scroll_pos_track < -text_track_width:
+                scroll_pos_track = 64
+        else:
+            # Center the track's name if it's shorter than the matrix width
+            scroll_pos_track = (64 - text_track_width) // 2 
+        text_track_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, track_name)
+        graphics.DrawText(offscreen_canvas, font, scroll_pos_track, TRACK_Y_POSITION, track_name_color, track_name)
+        # Logging
+        logging.debug(f"Artist Name: {artist_name}")
+        logging.debug(f"Text Artist Width: {text_artist_width}")
+        logging.debug(f"Scroll Position Artist: {scroll_pos_artist}")
+        logging.debug(f"Right Canvas Start X: {right_canvas_start_x}")
+        logging.debug(f"Right Canvas Width: {right_canvas_width}")
+        logging.debug("----")
+
+        matrix.SwapOnVSync(offscreen_canvas)
+        time.sleep(0.07)
+
+except KeyboardInterrupt:
+    pass
+finally:
+    offscreen_canvas.Clear()
     matrix.SwapOnVSync(offscreen_canvas)
+

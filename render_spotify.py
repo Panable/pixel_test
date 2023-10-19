@@ -8,16 +8,25 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from io import BytesIO
-import base64
-import websocket
-import json
+import threading
 
 app = Flask(__name__)
-# Spotify setup (Note: Replace these placeholder values with actual ones.)
+
+client_id = "0bd953803d7c40049e275816cc208579" 
+client_secret="4442c4bde22048808a3b05a600323164",
+redirect_uri="http://localhost:8000/callback",
+
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id="0bd953803d7c40049e275816cc208579",
                                                client_secret="4442c4bde22048808a3b05a600323164",
                                                redirect_uri="http://localhost:8000/callback",
-                                               scope="user-read-currently-playing user-read-playback-state"))
+                                               scope="user-read-currently-playing user-read-playback-state")) 
+
+shared_data = {
+    'track_name': None,
+    'artist_name': None,
+    'album_name': None,
+    'album_cover': None
+}
 
 # Retrieve track information
 track_info = sp.current_playback()
@@ -28,11 +37,11 @@ album_cover_url = track_info['item']['album']['images'][0]['url']
 album_name = track_info['item']['album']['name']
 # Matrix setup
 options = RGBMatrixOptions()
-options.rows = 32 
+options.rows = 32
 options.cols = 64
 options.chain_length = 1
 options.parallel = 1
-options.hardware_mapping = 'adafruit-hat-pwm'
+options.hardware_mapping = 'adafruit-hat'
 options.gpio_slowdown = 4 
 matrix = RGBMatrix(options=options)
 
@@ -40,6 +49,41 @@ font_path = "/usr/local/share/fonts/4x6.bdf"
 font = graphics.Font()
 font.LoadFont(font_path)
 color = graphics.Color(255, 255, 255)
+
+@app.route('/refresh_token', methods=['GET'])
+def refresh_token_endpoint():
+    refresh_token = request.args.get('refresh_token')
+    auth_string = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
+    
+    headers = {
+        'Authorization': f'Basic {auth_string}'
+    }
+    data = {
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token
+    }
+    
+    response = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data)
+    
+    if response.status_code == 200:
+        access_token = response.json().get('access_token')
+        return jsonify(access_token=access_token)
+    else:
+        return "Error refreshing token", 400
+
+def refresh_token():
+    # Assuming you stored your refresh token in a variable named refresh_token
+    response = requests.get(f"http://localhost:5000/refresh_token?refresh_token={refresh_token}")
+    if response.status_code == 200:
+        return response.json().get('access_token')
+    else:
+        # Handle the error
+        return None
+
+if __name__ == "__main__":
+    # Run the Flask app on a different thread
+    flask_thread = threading.Thread(target=app.run, kwargs={'debug': False, 'port': 5000})
+    flask_thread.start()
 
 class WindowCanvas:
     def __init__(self, delegatee, width, height, offset_x, offset_y):
@@ -63,64 +107,34 @@ class WindowCanvas:
         for y in range(self.height):
             for x in range(self.width):
                 self.set_pixel(x, y, r, g, b)
-@app.route('/refresh_token', methods=['GET'])
-def refresh_token_endpoint():
-    global current_access_token, current_refresh_token
-
-    refresh_token = request.args.get('refresh_token')
-    auth_string = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
-    
-    headers = {
-        'Authorization': f'Basic {auth_string}'
-    }
-    data = {
-        'grant_type': 'refresh_token',
-        'refresh_token': refresh_token
-    }
-    
-    response = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data)
-    
-    if response.status_code == 200:
-        current_access_token = response.json().get('access_token')
-        current_refresh_token = response.json().get('refresh_token', current_refresh_token)
-        return jsonify(access_token=current_access_token)
-    else:
-        return "Error refreshing token", 400
 
 
-def refresh_token():
-    global current_access_token
+def poll_spotify_for_changes():
+    global shared_data
 
-    response = requests.get(f"http://localhost:5000/refresh_token?refresh_token={current_refresh_token}")
-    if response.status_code == 200:
-        current_access_token = response.json().get('access_token')
-        return current_access_token
-    else:
-        # Handle the error
-        return None
-#Get album image
+    while True:
+        track_info = sp.current_playback()
+        
+        if track_info:
+            shared_data["track_info"] = track_info
+            shared_data["track_name"] = track_info['item']['name']
+            shared_data["artist_name"] = track_info['item']['artists'][0]['name']
+            shared_data["album_cover_url"] = track_info['item']['album']['images'][0]['url']
+            shared_data["album_name"] = track_info['item']['album']['name']
+
+        time.sleep(1)  # Poll every second
+
+polling_thread = threading.Thread(target=poll_spotify_for_changes)
+polling_thread.daemon = True  # This ensures the thread will exit when the main program exits
+polling_thread.start()
+
+# Get album image
 def get_album_cover_image(url, target_size=(26, 26)):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
     img = img.convert("RGB")  # Ensure the image is in RGB mode
     img = img.resize(target_size, Image.LANCZOS)
     return img
-if __name__ == "__main__":
-    # Run the Flask app on a different thread so it doesn't block the main execution
-    from threading import Thread
-    t = Thread(target=app.run, kwargs={'debug': False})
-    t.start()
-
-def on_message(ws, message):
-    data = json.loads(message)
-    if 'event' in data:
-        event_type = data['event']
-        if event_type == 'track_change':
-            track_info = data['track']
-            update_matrix_display(track_info)
-
-def update_matrix_display(track_info):
-    global track_name, artist_name, album_cover, album_name, current_track_id
 album_cover = get_album_cover_image(album_cover_url)
 
 # Create two window canvases: one for the album cover and one for the text
@@ -139,7 +153,6 @@ right_canvas_width = 32
 # Initial position of the artist name
 scroll_pos_artist = right_canvas_start_x
 
-logging.basicConfig(filename='scrolling_text.log', level=logging.DEBUG)
 
 CLEAR_COLOR = graphics.Color(0, 0, 0)  # Black for now, but you can change this
 
@@ -150,28 +163,23 @@ ALBUM_COVER_X_POSITION = 2
 TRACK_Y_POSITION = 7
 
 track_name_color = graphics.Color(29, 185, 84)
-prev_track_id = None
-offscreen_canvas = matrix.CreateFrameCanvas()
-last_polled_time = 0
-last_known_timestamp = 0
-current_track_id = None
 try:
     while True:
-#        offscreen_canvas = matrix.CreateFrameCanvas()
-        current_time = time.time()
-        if current_time - last_polled_time >= 1:  # Check every 5 seconds for track changes
-            previous_track_id = current_track_id
-            new_track_id = update_track_details()
-            if previous_track_id != new_track_id:  # A track change was detected
-                offscreen_canvas.Clear()
-            last_polled_time = current_time
-        offscreen_canvas.Clear() 
+        offscreen_canvas = matrix.CreateFrameCanvas()
+
+        # Fetch the latest track details from shared_data
+        track_name = shared_data["track_name"]
+        artist_name = shared_data["artist_name"]
+        album_cover_url = shared_data["album_cover_url"]
+        album_name = shared_data["album_name"]
+        album_cover = get_album_cover_image(album_cover_url)
+
         # Draw the album cover on the left half
         for y in range(ALBUM_COVER_Y_POSITION, ALBUM_COVER_Y_POSITION + 22):  
             for x in range(ALBUM_COVER_X_POSITION, ALBUM_COVER_X_POSITION + 22):
                 pixel = album_cover.getpixel((x - ALBUM_COVER_X_POSITION, y - ALBUM_COVER_Y_POSITION))
                 offscreen_canvas.SetPixel(x, y, pixel[0], pixel[1], pixel[2])
-
+ 
                 # Calculate the width of the artist's name
         text_artist_width = graphics.DrawText(offscreen_canvas, font, -9999, -9999, color, artist_name)
         
